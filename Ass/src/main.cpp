@@ -3,6 +3,10 @@
 #include <GLFW/glfw3.h>
 
 #include "Shader.h"
+#include "VertexBuffer.h"
+#include "IndexBuffer.h"
+#include "VertexArray.h"
+#include "BufferLayout.h"
 
 constexpr unsigned int WINDOW_WIDTH = 800;
 constexpr unsigned int WINDOW_HEIGHT = 600;
@@ -12,14 +16,7 @@ void processInputs(GLFWwindow* window);
 
 int main()
 {
-	/*
-	*
-	*
-		initialize and create window
-	*
-	*
-	*/
-
+	//initialize and create window
 	glfwInit();
 
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -43,24 +40,11 @@ int main()
 		std::cout << "Failed to initialize GLAD" << std::endl;
 		return -1;
 	}
-
+	
 	Shader shader("res/shaders/BasicVertex.shader", "res/shaders/BasicFragment.shader");
 	shader.Use();
 
-	/*
-	*
-	*
-		set up vertex data
-	*
-	*
-	*/
-
-	/*float vertices[] = {
-		-0.5f, -0.5f, 0.0f,
-		 0.5f, -0.5f, 0.0f,
-		 0.0f,  0.5f, 0.0f
-	};*/
-
+	//set up vertex data
 	float vertices[] = {
 		 0.5f,  0.5f, 0.0f,  // top right
 		 0.5f, -0.5f, 0.0f,  // bottom right
@@ -73,29 +57,19 @@ int main()
 		1, 2, 3		// second triangle
 	};
 
-	unsigned int VBO, VAO, EBO;
+	VertexArray* VAO = new VertexArray();
+	VertexBuffer* VBO = new VertexBuffer(vertices, 4 * 3 * sizeof(float));
+	IndexBuffer* EBO = new IndexBuffer(indices, 6);
+	BufferLayout* layout = new BufferLayout();
 
-	glGenVertexArrays(1, &VAO);
-	glGenBuffers(1, &VBO);
-	glGenBuffers(1, &EBO);
+	layout->Add<float>(3);
+	VAO->AddBuffer(*VBO, *layout);
 
-	glBindVertexArray(VAO);
-
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
-
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
+	VAO->Unbind();
 	shader.Delete();
 
-	//wireframe mode
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	//wire-frame mode
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -105,17 +79,18 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		shader.Use();
-		glBindVertexArray(VAO);
+		VAO->Bind();
+		EBO->Bind();
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-		//glBindVertexArray(0);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
 
-	glDeleteVertexArrays(1, &VAO);
-	glDeleteBuffers(1, &VBO);
-	glDeleteBuffers(1, &EBO);
+	delete VAO;
+	delete VBO;
+	delete EBO;
+	delete layout;
 
 	glfwTerminate();
 	return 0;
