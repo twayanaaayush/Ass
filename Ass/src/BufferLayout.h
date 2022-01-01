@@ -2,6 +2,7 @@
 
 #include <GLAD/glad.h>
 #include <vector>
+#include "Vertex.h"
 
 struct VertexAttrib
 {
@@ -44,6 +45,16 @@ public:
 	{
 		m_Attribs.push_back({ GL_UNSIGNED_BYTE, count, GL_TRUE });
 		m_Stride += count * sizeof(GLbyte);
+	}
+
+	template<>
+	void Add<Vertex>(unsigned int count)	// get the member count of struct
+	{
+		//int memCount = sizeof(Vertex) / sizeof(float); // hard code float as vertex has only float type
+		for (int i = 0; i < count; i++)
+		{
+			Add<float>(3);	//refactor this garbage code
+		}
 	}
 
 	inline const std::vector<VertexAttrib>& GetAttribs() const

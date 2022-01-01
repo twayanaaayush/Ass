@@ -11,6 +11,7 @@
 #include "VertexArray.h"
 #include "BufferLayout.h"
 #include "Camera.h"
+#include "Mesh.h"
 
 const unsigned int WINDOW_WIDTH = 1024;
 const unsigned int WINDOW_HEIGHT = 780;
@@ -165,27 +166,23 @@ int main()
 		1,  2,  3
 	};
 
-	VertexArray* VAO = new VertexArray();
-	VertexBuffer* VBO = new VertexBuffer(vertices, 24 * 6 * sizeof(float));
-	IndexBuffer* EBO = new IndexBuffer(indices, 36);
-	BufferLayout* layout = new BufferLayout();
+	std::vector<Vertex> verts;
+	std::vector<unsigned int> inds(indices, indices + (sizeof(indices) / sizeof(indices[0])));
 
-	layout->Add<float>(3);
-	layout->Add<float>(3);
+	for (int i = 0; i < sizeof(vertices) / sizeof(vertices[0]); i += 6)
+	{
+		Vertex v;
+		v.Position = glm::vec3(vertices[i], vertices[i+1], vertices[i+2]);
+		v.Normal = glm::vec3(vertices[i+3], vertices[i+4], vertices[i+5]);
 
-	VAO->AddBuffer(*VBO, *layout);
-	VAO->Unbind();
+		verts.push_back(v);
+	}
 
-	VertexArray* lightVAO = new VertexArray();
-	VertexBuffer* lightVBO = new VertexBuffer(vertices, 24 * 6 * sizeof(float));
-	IndexBuffer* lightEBO = new IndexBuffer(indices, 36);
-	BufferLayout* lightlayout = new BufferLayout();
+	memset(vertices, 0, sizeof(vertices));
+	memset(indices, 0, sizeof(indices));
 
-	lightlayout->Add<float>(3);
-	lightlayout->Add<float>(3);
-
-	lightVAO->AddBuffer(*lightVBO, *lightlayout);
-	lightVAO->Unbind();
+	Mesh cube(verts, inds);
+	Mesh light(verts, inds);
 
 	VertexArray* VAO_2 = new VertexArray();
 	VertexBuffer* VBO_2 = new VertexBuffer(grid, 4 * 3 * sizeof(float));
@@ -253,9 +250,7 @@ int main()
 		lightingShader.SetUniformMat4f("model", model);
 
 		// draw cube
-		VAO->Bind();
-		EBO->Bind();
-		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+		cube.Draw();
 
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
@@ -270,9 +265,7 @@ int main()
 		lightShader.SetUniformMat4f("model", model);
 
 		// draw light
-		lightVAO->Bind();
-		lightEBO->Bind();
-		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+		light.Draw();
 
 		// 3D grid
 
@@ -293,16 +286,6 @@ int main()
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
-
-	delete VAO;
-	delete VBO;
-	delete EBO;
-	delete layout;
-
-	delete lightVAO;
-	delete lightVBO;
-	delete lightEBO;
-	delete lightlayout;
 
 	delete VAO_2;
 	delete VBO_2;
