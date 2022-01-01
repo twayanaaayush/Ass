@@ -3,6 +3,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <glm/gtc/type_ptr.hpp>
 
 Shader::Shader(const std::string& vShaderFilePath, const std::string& fShaderFilePath)
 	: m_VertexPath(vShaderFilePath), m_FragmentPath(fShaderFilePath), m_RendererID(0)
@@ -113,9 +114,31 @@ int Shader::GetUniformLocation(const std::string& name)
 	return location;
 }
 
+void Shader::SetUniform1f(const std::string& name, float v)
+{
+	//TODO:: caching system 
+	glUniform1f(GetUniformLocation(name), v);
+}
+
 void Shader::SetUniform4f(const std::string& name, float v0, float v1, float v2, float v3)
 {
 	//TODO:: caching system 
 	glUniform4f(GetUniformLocation(name), v0, v1, v2, v3);
 }
 
+void Shader::SetUniformVec4f(const std::string& name, glm::vec4 vec)
+{
+	//TODO:: caching system 
+	glUniform4f(GetUniformLocation(name), vec.x, vec.y, vec.z, vec.w);
+}
+
+void Shader::SetUniformVec3f(const std::string& name, glm::vec3 vec)
+{
+	glUniform3f(GetUniformLocation(name), vec.x, vec.y, vec.z);
+}
+
+void Shader::SetUniformMat4f(const std::string& name, glm::mat4& mat)
+{
+	//TODO:: caching system 
+	glUniformMatrix4fv(GetUniformLocation(name), 1, GL_FALSE, glm::value_ptr(mat));
+}

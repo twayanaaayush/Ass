@@ -1,2 +1,14 @@
 ﻿  main.cpp
+D:\programs\C\cpp\Ass\Ass\src\main.cpp(219,21): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+D:\programs\C\cpp\Ass\Ass\src\main.cpp(220,42): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+D:\programs\C\cpp\Ass\Ass\src\main.cpp(362,66): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+D:\programs\C\cpp\Ass\Ass\src\main.cpp(363,59): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
   Ass.vcxproj -> D:\programs\C\cpp\Ass\x64\Debug\Ass.exe
