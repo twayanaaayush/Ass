@@ -77,8 +77,8 @@
     <None Include="res\shaders\BasicFragment.shader" />
     <None Include="res\shaders\GridVertex.shader" />
     <None Include="res\shaders\GridFragment.shader" />
-    <None Include="res\shaders\LightingVertex.shader" />
-    <None Include="res\shaders\LightingFragment.shader" />
+    <None Include="res\shaders\PhongVertex.shader" />
+    <None Include="res\shaders\PhongFragment.shader" />
     <None Include="res\shaders\LightVertex.shader" />
     <None Include="res\shaders\LightFragment.shader" />
   </ItemGroup>

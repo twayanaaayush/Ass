@@ -1,9 +1,4 @@
-﻿  Mesh.cpp
-D:\programs\C\cpp\Ass\Ass\src\BufferLayout.h(54,21): warning C4018: '<': signed/unsigned mismatch
-D:\programs\C\cpp\Ass\Ass\src\Mesh.cpp(25,78): warning C4267: 'argument': conversion from 'size_t' to 'unsigned int', possible loss of data
-D:\programs\C\cpp\Ass\Ass\src\Mesh.cpp(26,58): warning C4267: 'argument': conversion from 'size_t' to 'unsigned int', possible loss of data
-D:\programs\C\cpp\Ass\Ass\src\Mesh.cpp(47,67): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
-  main.cpp
+﻿  main.cpp
 D:\programs\C\cpp\Ass\Ass\src\BufferLayout.h(54,21): warning C4018: '<': signed/unsigned mismatch
 D:\programs\C\cpp\Ass\Ass\src\main.cpp(213,21): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
           with
@@ -17,5 +12,4 @@ D:\programs\C\cpp\Ass\Ass\src\main.cpp(214,42): warning C4244: '=': conversion f
           ]
 D:\programs\C\cpp\Ass\Ass\src\main.cpp(345,66): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
 D:\programs\C\cpp\Ass\Ass\src\main.cpp(346,59): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
-  Generating Code...
   Ass.vcxproj -> D:\programs\C\cpp\Ass\x64\Debug\Ass.exe

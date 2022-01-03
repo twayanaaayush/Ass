@@ -172,8 +172,8 @@
     <None Include="res\shaders\GridFragment.shader" />
     <None Include="res\shaders\GridVertex.shader" />
     <None Include="res\shaders\LightFragment.shader" />
-    <None Include="res\shaders\LightingFragment.shader" />
-    <None Include="res\shaders\LightingVertex.shader" />
+    <None Include="res\shaders\PhongFragment.shader" />
+    <None Include="res\shaders\PhongVertex.shader" />
     <None Include="res\shaders\LightVertex.shader" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

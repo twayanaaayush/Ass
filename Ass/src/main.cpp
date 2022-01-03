@@ -179,7 +179,7 @@ int main()
 	memset(indices, 0, sizeof(indices));
 
 	Mesh cube(verts, inds);
-	cube.SetShader("res/shaders/LightingVertex.shader", "res/shaders/LightingFragment.shader");
+	cube.SetShader("res/shaders/PhongVertex.shader", "res/shaders/PhongFragment.shader");
 	
 	Mesh light(verts, inds);
 	light.SetShader("res/shaders/LightVertex.shader", "res/shaders/LightFragment.shader");
