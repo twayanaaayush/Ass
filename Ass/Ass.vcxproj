@@ -158,7 +158,9 @@
     <ClInclude Include="src\BufferLayout.h" />
     <ClInclude Include="src\Camera.h" />
     <ClInclude Include="src\IndexBuffer.h" />
+    <ClInclude Include="src\Material.h" />
     <ClInclude Include="src\Mesh.h" />
+    <ClInclude Include="src\Scene.h" />
     <ClInclude Include="src\Shader.h" />
     <ClInclude Include="src\Vertex.h" />
     <ClInclude Include="src\VertexArray.h" />
