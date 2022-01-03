@@ -2,6 +2,7 @@
 
 #include <string>
 #include <glm/glm.hpp>
+#include "Material.h"
 
 struct ShaderProgramSource
 {
@@ -27,6 +28,7 @@ public:
 	void SetUniformVec4f(const std::string& name, glm::vec4 vec);
 	void SetUniformVec3f(const std::string& name, glm::vec3 vec);
 	void SetUniformMat4f(const std::string& name, glm::mat4& mat);
+	void SetUniformMaterial(const Material& material);
 
 private:
 	ShaderProgramSource ParseShader(const std::string vShaderFilePath, const std::string fShaderFilePath);

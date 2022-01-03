@@ -85,8 +85,6 @@ int main()
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_MULTISAMPLE);
 
-	Shader gridShader("res/shaders/GridVertex.shader", "res/shaders/GridFragment.shader");
-
 	float vertices[] = {
 		// Front face		// Normals
 		-1.0, -1.0,  1.0,	0.0, 0.0, 1.0,
@@ -184,6 +182,7 @@ int main()
 	Mesh light(verts, inds);
 	light.SetShader("res/shaders/LightVertex.shader", "res/shaders/LightFragment.shader");
 
+	Shader gridShader("res/shaders/GridVertex.shader", "res/shaders/GridFragment.shader");
 	VertexArray* VAO_2 = new VertexArray();
 	VertexBuffer* VBO_2 = new VertexBuffer(grid, 4 * 3 * sizeof(float));
 	IndexBuffer* EBO_2 = new IndexBuffer(gridIndices, 6);
@@ -226,15 +225,15 @@ int main()
 
 		// setting default uniforms
 		cube.GetShader().Use();
-		cube.GetShader().SetUniformVec3f("lightColor", glm::vec3(1.0f));
-		cube.GetShader().SetUniformVec3f("lightPos", lightPos);
+		cube.GetShader().SetUniformVec3f("light.position", lightPos);
+
+		cube.GetShader().SetUniformVec3f("light.ambient", glm::vec3(0.2f, 0.2f, 0.2f));
+		cube.GetShader().SetUniformVec3f("light.diffuse", glm::vec3(0.5f, 0.5f, 0.5f));
+		cube.GetShader().SetUniformVec3f("light.specular", glm::vec3(1.0f, 1.0f, 1.0f));
+
 		cube.GetShader().SetUniformVec3f("viewPos", camera.GetPosition());
 
-		cube.GetShader().SetUniformVec3f("material.color", cube.GetMaterial().color);
-		cube.GetShader().SetUniformVec3f("material.ambient", cube.GetMaterial().ambient);
-		cube.GetShader().SetUniformVec3f("material.diffuse", cube.GetMaterial().diffuse);
-		cube.GetShader().SetUniformVec3f("material.specular", cube.GetMaterial().specular);
-		cube.GetShader().SetUniform1f("material.shininess", cube.GetMaterial().shininess);
+		cube.GetShader().SetUniformMaterial(cube.GetMaterial());
 
 		// view/projection transformations
 		glm::mat4 projection = glm::perspective(camera.GetZoom(), (float)(WINDOW_WIDTH / WINDOW_HEIGHT), nearPlane, farPlane);

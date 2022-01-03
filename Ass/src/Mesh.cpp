@@ -49,8 +49,7 @@ void Mesh::Draw() const
 
 void Mesh::setDefaultMaterial()
 {
-	m_Material.color = glm::vec3(1.0f, 0.5f, 0.31f);
-	m_Material.ambient = glm::vec3(1.0f, 0.5f, 0.31f);
+	m_Material.ambient =  glm::vec3(1.0f, 0.5f, 0.31f);
 	m_Material.diffuse = glm::vec3(1.0f, 0.5f, 0.31f);
 	m_Material.specular = glm::vec3(0.5f, 0.5f, 0.5f);
 	m_Material.shininess = 32.0f;

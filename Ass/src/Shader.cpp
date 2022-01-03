@@ -142,3 +142,11 @@ void Shader::SetUniformMat4f(const std::string& name, glm::mat4& mat)
 	//TODO:: caching system 
 	glUniformMatrix4fv(GetUniformLocation(name), 1, GL_FALSE, glm::value_ptr(mat));
 }
+
+void Shader::SetUniformMaterial(const Material& material)
+{
+	SetUniformVec3f("material.ambient", material.ambient);
+	SetUniformVec3f("material.diffuse", material.diffuse);
+	SetUniformVec3f("material.specular", material.specular);
+	SetUniform1f("material.shininess", material.shininess);
+}
