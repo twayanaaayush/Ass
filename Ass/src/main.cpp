@@ -12,6 +12,7 @@
 #include "BufferLayout.h"
 #include "Camera.h"
 #include "Mesh.h"
+#include "Light.h"
 
 const unsigned int WINDOW_WIDTH = 1024;
 const unsigned int WINDOW_HEIGHT = 780;
@@ -19,7 +20,7 @@ const unsigned int WINDOW_HEIGHT = 780;
 bool WIREFRAME_SETTING = false;
 
 // camera
-Camera camera(glm::vec3(0.0f, 1.0f, 5.0f));
+Camera camera(glm::vec3(0.0f, 1.5f, 7.0f));
 double g_lastX, g_lastY;
 
 int buttonDown = -1;
@@ -33,8 +34,14 @@ double deltaTime = 0.0f;
 double lastTime = 0.0f;
 
 // light
-glm::vec3 lightPos = glm::vec3(1.2f, 1.0f, 2.0f);
+Light g_light = {
+		glm::vec3(0.0f, 1.0f, 2.0f),
+		glm::vec3(0.2f, 0.2f, 0.2f),
+		glm::vec3(0.5f, 0.5f, 0.5f),
+		glm::vec3(1.0f, 1.0f, 1.0f)
+	};
 
+// function declaration
 void frameBuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window, double deltaTime);
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
@@ -47,7 +54,6 @@ int main()
 {
 	//initialize and create window
 	glfwInit();
-
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -85,75 +91,20 @@ int main()
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_MULTISAMPLE);
 
-	float vertices[] = {
-		// Front face		// Normals
-		-1.0, -1.0,  1.0,	0.0, 0.0, 1.0,
-		 1.0, -1.0,  1.0,	0.0, 0.0, 1.0,
-		 1.0,  1.0,  1.0,	0.0, 0.0, 1.0,
-		-1.0,  1.0,  1.0,	0.0, 0.0, 1.0,
+	// shader
+	Shader phongShader("res/shaders/PhongVertex.shader", "res/shaders/PhongFragment.shader");
+	Shader lightShader("res/shaders/lightVertex.shader", "res/shaders/lightFragment.shader");
+	Shader gridShader("res/shaders/GridVertex.shader", "res/shaders/GridFragment.shader");
 
-		// Back face
-		-1.0, -1.0, -1.0,	0.0, 0.0, -1.0,
-		-1.0,  1.0, -1.0,	0.0, 0.0, -1.0,
-		 1.0,  1.0, -1.0,	0.0, 0.0, -1.0,
-		 1.0, -1.0, -1.0,	0.0, 0.0, -1.0,
-
-		 // Top face
-		-1.0,  1.0, -1.0,	0.0, 1.0, 0.0,
-		-1.0,  1.0,  1.0,	0.0, 1.0, 0.0,
-		 1.0,  1.0,  1.0,	0.0, 1.0, 0.0,
-		 1.0,  1.0, -1.0,	0.0, 1.0, 0.0,
-
-		 // Bottom face
-		 -1.0, -1.0, -1.0,	0.0, -1.0, 0.0,
-		  1.0, -1.0, -1.0,	0.0, -1.0, 0.0,
-		  1.0, -1.0,  1.0,	0.0, -1.0, 0.0,
-		 -1.0, -1.0,  1.0,	0.0, -1.0, 0.0,
-
-		 // Right face
-		 1.0, -1.0, -1.0,	1.0, 0.0, 0.0,
-		 1.0,  1.0, -1.0,	1.0, 0.0, 0.0,
-		 1.0,  1.0,  1.0,	1.0, 0.0, 0.0,
-		 1.0, -1.0,  1.0,	1.0, 0.0, 0.0,
-
-		 // Left face
-		 -1.0, -1.0, -1.0,	-1.0, 0.0, 0.0,
-		 -1.0, -1.0,  1.0,	-1.0, 0.0, 0.0,
-		 -1.0,  1.0,  1.0,	-1.0, 0.0, 0.0,
-		 -1.0,  1.0, -1.0,	- 1.0, 0.0, 0.0
-	};
-
-	unsigned int indices[] = {
-		// front
-		0,  1,  2,
-		0,  2,  3,
-
-		// back
-		4,  5,  6,
-		4,  6,  7,
-
-		// top
-		8,  9,  10,
-		8,  10, 11,
-
-		// bottom
-		12, 13, 14,
-		12, 14, 15,
-
-		// right
-		16, 17, 18,
-		16, 18, 19,
-
-		// left
-		20, 21, 22,
-		20, 22, 23
-	};
+	// Meshes
+	Mesh cube(cube::vertices, cube::triangles);
+	Mesh light(cube::vertices, cube::triangles);
 
 	float grid[] = {
-		 1.0f,  1.0f, 0.0f,
-		 1.0f, -1.0f, 0.0f,
-		-1.0f, -1.0f, 0.0f,
-		-1.0f,  1.0f, 0.0f
+	 1.0f,  1.0f, 0.0f,
+	 1.0f, -1.0f, 0.0f,
+	-1.0f, -1.0f, 0.0f,
+	-1.0f,  1.0f, 0.0f
 	};
 
 	unsigned int gridIndices[] = {
@@ -161,28 +112,6 @@ int main()
 		1,  2,  3
 	};
 
-	std::vector<Vertex> verts;
-	std::vector<unsigned int> inds(indices, indices + (sizeof(indices) / sizeof(indices[0])));
-
-	for (int i = 0; i < sizeof(vertices) / sizeof(vertices[0]); i += 6)
-	{
-		Vertex v;
-		v.Position = glm::vec3(vertices[i], vertices[i+1], vertices[i+2]);
-		v.Normal = glm::vec3(vertices[i+3], vertices[i+4], vertices[i+5]);
-
-		verts.push_back(v);
-	}
-
-	memset(vertices, 0, sizeof(vertices));
-	memset(indices, 0, sizeof(indices));
-
-	Mesh cube(verts, inds);
-	cube.SetShader("res/shaders/PhongVertex.shader", "res/shaders/PhongFragment.shader");
-	
-	Mesh light(verts, inds);
-	light.SetShader("res/shaders/LightVertex.shader", "res/shaders/LightFragment.shader");
-
-	Shader gridShader("res/shaders/GridVertex.shader", "res/shaders/GridFragment.shader");
 	VertexArray* VAO_2 = new VertexArray();
 	VertexBuffer* VBO_2 = new VertexBuffer(grid, 4 * 3 * sizeof(float));
 	IndexBuffer* EBO_2 = new IndexBuffer(gridIndices, 6);
@@ -195,25 +124,18 @@ int main()
 
 	while (!glfwWindowShouldClose(window))
 	{
-		// calculate delta-time
-
+		// calculate delta-
 		double  currentTime = glfwGetTime();
 		deltaTime = currentTime - lastTime;
 		lastTime = currentTime;
 
-		// process inputs & clear scr
-
+		// process inputs & clear 
 		processInput(window, deltaTime);
 
 		glClearColor(0.15f, 0.15f, 0.15f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		// orbit light
-		lightPos.x = 1.0f + sin(glfwGetTime()) * 2.0f;
-		lightPos.y = sin(glfwGetTime() / 2.0f) * 1.0f;
-
-		// 3D cube model
-
+		// 3D cube 
 		if (WIREFRAME_SETTING)
 		{
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -224,23 +146,20 @@ int main()
 		}
 
 		// setting default uniforms
-		cube.GetShader().Use();
-		cube.GetShader().SetUniformVec3f("light.position", lightPos);
-
-		cube.GetShader().SetUniformVec3f("light.ambient", glm::vec3(0.2f, 0.2f, 0.2f));
-		cube.GetShader().SetUniformVec3f("light.diffuse", glm::vec3(0.5f, 0.5f, 0.5f));
-		cube.GetShader().SetUniformVec3f("light.specular", glm::vec3(1.0f, 1.0f, 1.0f));
-
-		cube.GetShader().SetUniformVec3f("viewPos", camera.GetPosition());
-
-		cube.GetShader().SetUniformMaterial(cube.GetMaterial());
+		phongShader.Use();
+		phongShader.SetUniformVec3f("light.position", g_light.position);
+		phongShader.SetUniformVec3f("light.ambient", g_light.ambient);
+		phongShader.SetUniformVec3f("light.diffuse", g_light.diffuse);
+		phongShader.SetUniformVec3f("light.specular", g_light.specular);
+		phongShader.SetUniformVec3f("viewPos", camera.GetPosition());
+		phongShader.SetUniformMaterial(cube.GetMaterial());
 
 		// view/projection transformations
 		glm::mat4 projection = glm::perspective(camera.GetZoom(), (float)(WINDOW_WIDTH / WINDOW_HEIGHT), nearPlane, farPlane);
 		glm::mat4 view = camera.GetViewMatrix();
 
-		cube.GetShader().SetUniformMat4f("projection", projection);
-		cube.GetShader().SetUniformMat4f("view", view);
+		phongShader.SetUniformMat4f("projection", projection);
+		phongShader.SetUniformMat4f("view", view);
 
 		// world transforamtions
 		glm::mat4 model = glm::mat4(1.0f);
@@ -248,31 +167,30 @@ int main()
 		model = glm::rotate(model, glm::radians(g_rotX_angle), glm::vec3(1.0f, 0.0f, 0.0f));
 		model = glm::rotate(model, glm::radians(g_rotY_angle), glm::vec3(0.0f, 1.0f, 0.0f));
 
-		cube.GetShader().SetUniformMat4f("model", model);
+		phongShader.SetUniformMat4f("model", model);
 
 		// draw cube
 		cube.Draw();
 
 
-
+		// light
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-		// light
-		light.GetShader().Use();
-		light.GetShader().SetUniformMat4f("projection", projection);
-		light.GetShader().SetUniformMat4f("view", view);
+		lightShader.Use();
+		lightShader.SetUniformMat4f("projection", projection);
+		lightShader.SetUniformMat4f("view", view);
 
 		model = glm::mat4(1.0f);
-		model = glm::translate(model, lightPos);
+		model = glm::translate(model, g_light.position);
 		model = glm::scale(model, glm::vec3(0.2f)); // a smaller cube
-		light.GetShader().SetUniformMat4f("model", model);
 
-		// draw light
+		lightShader.SetUniformMat4f("model", model);
+
+		//// draw light
 		light.Draw();
 
 		// 3D 
 		gridShader.Use();
-
 		gridShader.SetUniform1f("nearPlane", nearPlane);
 		gridShader.SetUniform1f("farPlane", farPlane);
 		gridShader.SetUniformMat4f("projection", projection);
@@ -322,14 +240,6 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 void setWireframe()
 {
 	WIREFRAME_SETTING = !WIREFRAME_SETTING;
-	//if (WIREFRAME_SETTING)
-	//{
-	//	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	//}
-	//else 
-	//{
-	//	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	//}
 }
 
 void cursor_callback(GLFWwindow* window, double xpos, double ypos)
@@ -341,8 +251,8 @@ void cursor_callback(GLFWwindow* window, double xpos, double ypos)
 
 	if (buttonDown == 0)
 	{
-		g_rotX_angle += (ypos - g_lastY) * camera.GetMouseSensitivity();
-		g_rotY_angle += (xoffset) * camera.GetMouseSensitivity();
+		g_rotX_angle += (float)((ypos - g_lastY) * camera.GetMouseSensitivity());
+		g_rotY_angle += (float)((xoffset) * camera.GetMouseSensitivity());
 	}
 
 	g_lastX = xpos;
@@ -361,8 +271,5 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 	if (action == GLFW_PRESS)
 		buttonDown = button;
 	else
-		buttonDown = -1;
-
-	//if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) buttonDown = true;
-	//if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) buttonDown = false;	
+		buttonDown = -1;	
 }

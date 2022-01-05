@@ -1,15 +1,6 @@
-﻿  main.cpp
-D:\programs\C\cpp\Ass\Ass\src\BufferLayout.h(54,21): warning C4018: '<': signed/unsigned mismatch
-D:\programs\C\cpp\Ass\Ass\src\main.cpp(212,21): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
-          with
-          [
-              T=float
-          ]
-D:\programs\C\cpp\Ass\Ass\src\main.cpp(213,42): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
-          with
-          [
-              T=float
-          ]
-D:\programs\C\cpp\Ass\Ass\src\main.cpp(344,66): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
-D:\programs\C\cpp\Ass\Ass\src\main.cpp(345,59): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+﻿  Mesh.cpp
+D:\programs\C\cpp\Ass\Ass\src\Mesh.cpp(29,91): warning C4267: 'argument': conversion from 'size_t' to 'unsigned int', possible loss of data
+D:\programs\C\cpp\Ass\Ass\src\Mesh.cpp(43,67): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+  main.cpp
+  Generating Code...
   Ass.vcxproj -> D:\programs\C\cpp\Ass\x64\Debug\Ass.exe

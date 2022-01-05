@@ -51,7 +51,7 @@ public:
 	void Add<Vertex>(unsigned int count)	// get the member count of struct
 	{
 		//int memCount = sizeof(Vertex) / sizeof(float); // hard code float as vertex has only float type
-		for (int i = 0; i < count; i++)
+		for (unsigned int i = 0; i < count; i++)
 		{
 			Add<float>(3);	//refactor this garbage code
 		}

@@ -157,7 +157,9 @@
   <ItemGroup>
     <ClInclude Include="src\BufferLayout.h" />
     <ClInclude Include="src\Camera.h" />
+    <ClInclude Include="src\Geometry.h" />
     <ClInclude Include="src\IndexBuffer.h" />
+    <ClInclude Include="src\Light.h" />
     <ClInclude Include="src\Material.h" />
     <ClInclude Include="src\Mesh.h" />
     <ClInclude Include="src\Scene.h" />
