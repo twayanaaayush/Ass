@@ -7,7 +7,14 @@
 //	AddMaterial();
 //}
 
-Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices)
+//Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices)
+//	: m_Vertices(std::move(vertices)), m_Indices(std::move(indices))
+//{
+//	InitBuffers();
+//	AddMaterial();
+//}
+
+Mesh::Mesh(std::vector<Vertex_P> vertices, std::vector<unsigned int> indices)
 	: m_Vertices(std::move(vertices)), m_Indices(std::move(indices))
 {
 	InitBuffers();
@@ -29,7 +36,7 @@ void Mesh::InitBuffers()
 	m_EBO = new IndexBuffer(reinterpret_cast<unsigned int*>(&m_Indices[0]), m_Indices.size());
 	m_Layout = new BufferLayout();
 
-	m_Layout->Add<Vertex>(2);	//vertex has 2 mem attribute
+	m_Layout->Add<Vertex>(1);	//vertex has 2 mem attribute
 
 	m_VAO->AddBuffer(*m_VBO, *m_Layout);
 	m_VAO->Unbind();

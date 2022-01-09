@@ -92,19 +92,21 @@ int main()
 	glEnable(GL_MULTISAMPLE);
 
 	// shader
-	Shader phongShader("res/shaders/PhongVertex.shader", "res/shaders/PhongFragment.shader");
-	Shader lightShader("res/shaders/lightVertex.shader", "res/shaders/lightFragment.shader");
+	Shader basicShader("res/shaders/BasicVertex.shader", "res/shaders/BasicFragment.shader");
+	//Shader phongShader("res/shaders/PhongVertex.shader", "res/shaders/PhongFragment.shader");
+	//Shader lightShader("res/shaders/lightVertex.shader", "res/shaders/lightFragment.shader");
 	Shader gridShader("res/shaders/GridVertex.shader", "res/shaders/GridFragment.shader");
 
 	// Meshes
-	Mesh cube(cube::vertices, cube::triangles);
-	Mesh light(cube::vertices, cube::triangles);
+	//Mesh cube(cube::vertices, cube::triangles);
+	Mesh icosahedron(icosahedron::vertices, icosahedron::triangles);
+	//Mesh light(cube::vertices, cube::triangles);
 
 	float grid[] = {
-	 1.0f,  1.0f, 0.0f,
-	 1.0f, -1.0f, 0.0f,
-	-1.0f, -1.0f, 0.0f,
-	-1.0f,  1.0f, 0.0f
+		 1.0f,  1.0f, 0.0f,
+		 1.0f, -1.0f, 0.0f,
+		-1.0f, -1.0f, 0.0f,
+		-1.0f,  1.0f, 0.0f
 	};
 
 	unsigned int gridIndices[] = {
@@ -146,48 +148,62 @@ int main()
 		}
 
 		// setting default uniforms
-		phongShader.Use();
-		phongShader.SetUniformVec3f("light.position", g_light.position);
-		phongShader.SetUniformVec3f("light.ambient", g_light.ambient);
-		phongShader.SetUniformVec3f("light.diffuse", g_light.diffuse);
-		phongShader.SetUniformVec3f("light.specular", g_light.specular);
-		phongShader.SetUniformVec3f("viewPos", camera.GetPosition());
-		phongShader.SetUniformMaterial(cube.GetMaterial());
+		//phongShader.Use();
+		//phongShader.SetUniformVec3f("light.position", g_light.position);
+		//phongShader.SetUniformVec3f("light.ambient", g_light.ambient);
+		//phongShader.SetUniformVec3f("light.diffuse", g_light.diffuse);
+		//phongShader.SetUniformVec3f("light.specular", g_light.specular);
+		//phongShader.SetUniformVec3f("viewPos", camera.GetPosition());
+		//phongShader.SetUniformMaterial(cube.GetMaterial());
 
 		// view/projection transformations
+		basicShader.Use();
+		basicShader.SetUniform4f("color", 1.0f, 0.5f, 0.31f, 1.0f);
+
 		glm::mat4 projection = glm::perspective(camera.GetZoom(), (float)(WINDOW_WIDTH / WINDOW_HEIGHT), nearPlane, farPlane);
 		glm::mat4 view = camera.GetViewMatrix();
+		basicShader.SetUniformMat4f("projection", projection);
+		basicShader.SetUniformMat4f("view", view);
 
-		phongShader.SetUniformMat4f("projection", projection);
-		phongShader.SetUniformMat4f("view", view);
+		//phongShader.SetUniformMat4f("projection", projection);
+		//phongShader.SetUniformMat4f("view", view);
 
 		// world transforamtions
-		glm::mat4 model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(0.0f, 1.0f, 0.0f));
-		model = glm::rotate(model, glm::radians(g_rotX_angle), glm::vec3(1.0f, 0.0f, 0.0f));
-		model = glm::rotate(model, glm::radians(g_rotY_angle), glm::vec3(0.0f, 1.0f, 0.0f));
+		//glm::mat4 model = glm::mat4(1.0f);
+		//model = glm::translate(model, glm::vec3(0.0f, 1.0f, 0.0f));
+		//model = glm::rotate(model, glm::radians(g_rotX_angle), glm::vec3(1.0f, 0.0f, 0.0f));
+		//model = glm::rotate(model, glm::radians(g_rotY_angle), glm::vec3(0.0f, 1.0f, 0.0f));
 
-		phongShader.SetUniformMat4f("model", model);
+		//phongShader.SetUniformMat4f("model", model);
 
 		// draw cube
-		cube.Draw();
+		//cube.Draw();
 
+		// icosahedron
+		basicShader.SetUniformMat4f("projection", projection);
+		basicShader.SetUniformMat4f("view", view);
+		glm::mat4 model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(0.0f, 1.0f, 0.0f));
+		basicShader.SetUniformMat4f("model", model);
+
+		// draw icosahedron
+		icosahedron.Draw();
 
 		// light
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-		lightShader.Use();
-		lightShader.SetUniformMat4f("projection", projection);
-		lightShader.SetUniformMat4f("view", view);
+		//lightShader.Use();
+		//lightShader.SetUniformMat4f("projection", projection);
+		//lightShader.SetUniformMat4f("view", view);
 
-		model = glm::mat4(1.0f);
-		model = glm::translate(model, g_light.position);
-		model = glm::scale(model, glm::vec3(0.2f)); // a smaller cube
+		//model = glm::mat4(1.0f);
+		//model = glm::translate(model, g_light.position);
+		//model = glm::scale(model, glm::vec3(0.2f)); // a smaller cube
 
-		lightShader.SetUniformMat4f("model", model);
+		//lightShader.SetUniformMat4f("model", model);
 
 		//// draw light
-		light.Draw();
+		//light.Draw();
 
 		// 3D 
 		gridShader.Use();

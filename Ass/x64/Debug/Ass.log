@@ -1,6 +1,7 @@
 ﻿  Mesh.cpp
-D:\programs\C\cpp\Ass\Ass\src\Mesh.cpp(29,91): warning C4267: 'argument': conversion from 'size_t' to 'unsigned int', possible loss of data
-D:\programs\C\cpp\Ass\Ass\src\Mesh.cpp(43,67): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+D:\programs\C\cpp\Ass\Ass\src\Mesh.cpp(36,91): warning C4267: 'argument': conversion from 'size_t' to 'unsigned int', possible loss of data
+D:\programs\C\cpp\Ass\Ass\src\Mesh.cpp(50,67): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+  VertexBuffer.cpp
   main.cpp
   Generating Code...
   Ass.vcxproj -> D:\programs\C\cpp\Ass\x64\Debug\Ass.exe

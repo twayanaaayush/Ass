@@ -17,7 +17,8 @@ private:
 	BufferLayout* m_Layout;
 
 	// mesh data
-	std::vector<Vertex> m_Vertices;
+	//std::vector<Vertex> m_Vertices;
+	std::vector<Vertex_P> m_Vertices;
 	//std::vector<Triangle> m_Indices;
 	std::vector<unsigned int> m_Indices;
 
@@ -26,7 +27,8 @@ private:
 
 public:
 	//Mesh(std::vector<Vertex> vertices, std::vector<Triangle> indices);
-	Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices);
+	//Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices);
+	Mesh(std::vector<Vertex_P> vertices, std::vector<unsigned int> indices);
 	~Mesh();
 	void Draw() const;
 	void AddMaterial(
