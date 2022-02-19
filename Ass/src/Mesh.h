@@ -2,43 +2,45 @@
 
 #include <iostream>
 #include <vector>
+#include <map>
+#include <array>
 #include "Vertex.h"
 #include "Geometry.h"
 #include "Material.h"
 #include "VertexArray.h"
 #include "IndexBuffer.h"
+#include "Shader.h"
+
+using Index = unsigned int;
+using Lookup = std::map<std::pair<Index, Index>, Index>;
+using IndexedMesh = std::pair<std::vector<Vertex>, std::vector<Triangle>>;
 
 class Mesh
 {
-private:
+protected:
 	VertexArray* m_VAO;
 	VertexBuffer* m_VBO;
 	IndexBuffer* m_EBO;
 	BufferLayout* m_Layout;
 
-	// mesh data
-	//std::vector<Vertex> m_Vertices;
-	std::vector<Vertex_P> m_Vertices;
-	//std::vector<Triangle> m_Indices;
-	std::vector<unsigned int> m_Indices;
+	std::vector<Vertex> m_Vertices;
+	std::vector<Triangle> m_Indices;
 
-	// material data
-	Material m_Material;
+	//Shader* shader;
 
 public:
-	//Mesh(std::vector<Vertex> vertices, std::vector<Triangle> indices);
-	//Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices);
-	Mesh(std::vector<Vertex_P> vertices, std::vector<unsigned int> indices);
+	Mesh();
+	Mesh(std::vector<Vertex> vertices, std::vector<Triangle> indices);
 	~Mesh();
 	void Draw() const;
-	void AddMaterial(
-		glm::vec3 ambient = glm::vec3(1.0f, 0.5f, 0.31f),
-		glm::vec3 diffuse = glm::vec3(1.0f, 0.5f, 0.31f),
-		glm::vec3 specular = glm::vec3(0.5f, 0.5f, 0.5f),
-		float shininess = 32.0f
-	);
-	inline Material GetMaterial() { return m_Material; }	// pass reference
+	//void SetShader(Shader* shader);
+	void SetVertices(std::vector<Vertex> vertices);
+	void SetIndices(std::vector<Triangle> indices);
+	void UpdateBuffers();
 
-private:
+protected:
 	void InitBuffers();
+	IndexedMesh MakeIcosphere(int subdivisions);
+	Index vertex_for_edge(Lookup& lookup, std::vector<Vertex>& vertices, Index first, Index second);
+	std::vector<Triangle> Subdivide(std::vector<Vertex>& vertices, std::vector<Triangle> triangles);
 };

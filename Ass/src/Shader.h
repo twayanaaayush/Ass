@@ -24,8 +24,8 @@ public:
 	void Delete() const;
 
 	void SetUniform1f(const std::string& name, float v);
-	void SetUniform4f(const std::string& name, float v0, float v1, float v2, float v3);
-	void SetUniformVec4f(const std::string& name, glm::vec4 vec);
+	//void SetUniform4f(const std::string& name, float v0, float v1, float v2, float v3);
+	//void SetUniformVec4f(const std::string& name, glm::vec4 vec);
 	void SetUniformVec3f(const std::string& name, glm::vec3 vec);
 	void SetUniformMat4f(const std::string& name, glm::mat4& mat);
 	void SetUniformMaterial(const Material& material);

@@ -5,10 +5,10 @@
 struct Vertex
 {
 	glm::vec3 Position;
-	glm::vec3 Normal;
 };
 
-struct Vertex_P
+struct Vertex_2
 {
 	glm::vec3 Position;
+	glm::vec3 Normal;
 };

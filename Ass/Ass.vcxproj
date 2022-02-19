@@ -157,13 +157,18 @@
   <ItemGroup>
     <ClInclude Include="src\BufferLayout.h" />
     <ClInclude Include="src\Camera.h" />
+    <ClInclude Include="src\GameObject.h" />
     <ClInclude Include="src\Geometry.h" />
     <ClInclude Include="src\IndexBuffer.h" />
     <ClInclude Include="src\Light.h" />
+    <ClInclude Include="src\Manager.h" />
     <ClInclude Include="src\Material.h" />
     <ClInclude Include="src\Mesh.h" />
+    <ClInclude Include="src\Particle.h" />
+    <ClInclude Include="src\Renderer.h" />
     <ClInclude Include="src\Scene.h" />
     <ClInclude Include="src\Shader.h" />
+    <ClInclude Include="src\Transform.h" />
     <ClInclude Include="src\Vertex.h" />
     <ClInclude Include="src\VertexArray.h" />
     <ClInclude Include="src\VertexBuffer.h" />

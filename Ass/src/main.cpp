@@ -35,11 +35,19 @@ double lastTime = 0.0f;
 
 // light
 Light g_light = {
-		glm::vec3(0.0f, 1.0f, 2.0f),
-		glm::vec3(0.2f, 0.2f, 0.2f),
-		glm::vec3(0.5f, 0.5f, 0.5f),
-		glm::vec3(1.0f, 1.0f, 1.0f)
-	};
+	glm::vec3(2.0f, 2.0f, 2.0f),
+	glm::vec3(0.2f, 0.2f, 0.2f),
+	glm::vec3(0.5f, 0.5f, 0.5f),
+	glm::vec3(1.0f, 1.0f, 1.0f)
+};
+
+//Material
+Material g_material = {
+	glm::vec3(1.0f, 0.5f, 0.31f),
+	glm::vec3(1.0f, 0.5f, 0.31f),
+	glm::vec3(0.5f, 0.5f, 0.5f),
+	32.0f
+};
 
 // function declaration
 void frameBuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -91,53 +99,47 @@ int main()
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_MULTISAMPLE);
 
-	// shader
-	Shader basicShader("res/shaders/BasicVertex.shader", "res/shaders/BasicFragment.shader");
-	//Shader phongShader("res/shaders/PhongVertex.shader", "res/shaders/PhongFragment.shader");
-	//Shader lightShader("res/shaders/lightVertex.shader", "res/shaders/lightFragment.shader");
-	Shader gridShader("res/shaders/GridVertex.shader", "res/shaders/GridFragment.shader");
+	// shaders
+	Shader phongShader("res/shaders/PhongVertex.shader", "res/shaders/PhongFragment.shader");
+	//Shader gridShader("res/shaders/GridVertex.shader", "res/shaders/GridFragment.shader");
 
 	// Meshes
-	//Mesh cube(cube::vertices, cube::triangles);
-	Mesh icosahedron(icosahedron::vertices, icosahedron::triangles);
-	//Mesh light(cube::vertices, cube::triangles);
+	Mesh cube(cube::vertices, cube::triangles);
+	Mesh icosphere;
 
-	float grid[] = {
-		 1.0f,  1.0f, 0.0f,
-		 1.0f, -1.0f, 0.0f,
-		-1.0f, -1.0f, 0.0f,
-		-1.0f,  1.0f, 0.0f
+	/*std::vector<Vertex> grid = {
+		{glm::vec3(1.0f,  1.0f, 0.0f)},
+		{glm::vec3(1.0f, -1.0f, 0.0f)},
+		{glm::vec3(-1.0f, -1.0f, 0.0f)},
+		{glm::vec3(-1.0f,  1.0f, 0.0f)}
 	};
 
-	unsigned int gridIndices[] = {
-		0,  1,  3,
-		1,  2,  3
+	std::vector<Triangle> gridIndices = {
+		{0,  1,  3},
+		{1,  2,  3}
 	};
 
 	VertexArray* VAO_2 = new VertexArray();
-	VertexBuffer* VBO_2 = new VertexBuffer(grid, 4 * 3 * sizeof(float));
-	IndexBuffer* EBO_2 = new IndexBuffer(gridIndices, 6);
+	VertexBuffer* VBO_2 = new VertexBuffer(&grid[0], 4 * 3 * sizeof(Vertex));
+	IndexBuffer* EBO_2 = new IndexBuffer(reinterpret_cast<unsigned int*>(&gridIndices[0]), gridIndices.size()*3);
 	BufferLayout* layout_2 = new BufferLayout();
 
 	layout_2->Add<float>(3);
 
 	VAO_2->AddBuffer(*VBO_2, *layout_2);
-	VAO_2->Unbind();
+	VAO_2->Unbind();*/
 
 	while (!glfwWindowShouldClose(window))
 	{
-		// calculate delta-
 		double  currentTime = glfwGetTime();
 		deltaTime = currentTime - lastTime;
 		lastTime = currentTime;
 
-		// process inputs & clear 
 		processInput(window, deltaTime);
 
 		glClearColor(0.15f, 0.15f, 0.15f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		// 3D cube 
 		if (WIREFRAME_SETTING)
 		{
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -148,82 +150,55 @@ int main()
 		}
 
 		// setting default uniforms
-		//phongShader.Use();
-		//phongShader.SetUniformVec3f("light.position", g_light.position);
-		//phongShader.SetUniformVec3f("light.ambient", g_light.ambient);
-		//phongShader.SetUniformVec3f("light.diffuse", g_light.diffuse);
-		//phongShader.SetUniformVec3f("light.specular", g_light.specular);
-		//phongShader.SetUniformVec3f("viewPos", camera.GetPosition());
-		//phongShader.SetUniformMaterial(cube.GetMaterial());
+		phongShader.Use();
+		phongShader.SetUniformVec3f("light.position", g_light.position);
+		phongShader.SetUniformVec3f("light.ambient", g_light.ambient);
+		phongShader.SetUniformVec3f("light.diffuse", g_light.diffuse);
+		phongShader.SetUniformVec3f("light.specular", g_light.specular);
+		phongShader.SetUniformVec3f("viewPos", camera.GetPosition());
+		phongShader.SetUniformMaterial(g_material);
 
-		// view/projection transformations
-		basicShader.Use();
-		basicShader.SetUniform4f("color", 1.0f, 0.5f, 0.31f, 1.0f);
 
 		glm::mat4 projection = glm::perspective(camera.GetZoom(), (float)(WINDOW_WIDTH / WINDOW_HEIGHT), nearPlane, farPlane);
 		glm::mat4 view = camera.GetViewMatrix();
-		basicShader.SetUniformMat4f("projection", projection);
-		basicShader.SetUniformMat4f("view", view);
+		glm::mat4 cube_model = glm::mat4(1.0f);
 
-		//phongShader.SetUniformMat4f("projection", projection);
-		//phongShader.SetUniformMat4f("view", view);
 
-		// world transforamtions
-		//glm::mat4 model = glm::mat4(1.0f);
-		//model = glm::translate(model, glm::vec3(0.0f, 1.0f, 0.0f));
-		//model = glm::rotate(model, glm::radians(g_rotX_angle), glm::vec3(1.0f, 0.0f, 0.0f));
-		//model = glm::rotate(model, glm::radians(g_rotY_angle), glm::vec3(0.0f, 1.0f, 0.0f));
+		cube_model = glm::scale(cube_model, glm::vec3(1.5f));
+		cube_model = glm::translate(cube_model, glm::vec3(0.0f, 1.0f, 0.0f));
+		cube_model = glm::rotate(cube_model, glm::radians(g_rotX_angle), glm::vec3(1.0f, 0.0f, 0.0f));
+		cube_model = glm::rotate(cube_model, glm::radians(g_rotY_angle), glm::vec3(0.0f, 1.0f, 0.0f));
 
-		//phongShader.SetUniformMat4f("model", model);
+		phongShader.SetUniformMat4f("projection", projection);
+		phongShader.SetUniformMat4f("view", view);
+		phongShader.SetUniformMat4f("model", cube_model);
 
 		// draw cube
 		//cube.Draw();
 
-		// icosahedron
-		basicShader.SetUniformMat4f("projection", projection);
-		basicShader.SetUniformMat4f("view", view);
-		glm::mat4 model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(0.0f, 1.0f, 0.0f));
-		basicShader.SetUniformMat4f("model", model);
-
 		// draw icosahedron
-		icosahedron.Draw();
+		icosphere.Draw();
 
-		// light
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-		//lightShader.Use();
-		//lightShader.SetUniformMat4f("projection", projection);
-		//lightShader.SetUniformMat4f("view", view);
+		//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		//gridShader.Use();
+		//gridShader.SetUniform1f("nearPlane", nearPlane);
+		//gridShader.SetUniform1f("farPlane", farPlane);
+		//gridShader.SetUniformMat4f("projection", projection);
+		//gridShader.SetUniformMat4f("view", view);
 
-		//model = glm::mat4(1.0f);
-		//model = glm::translate(model, g_light.position);
-		//model = glm::scale(model, glm::vec3(0.2f)); // a smaller cube
-
-		//lightShader.SetUniformMat4f("model", model);
-
-		//// draw light
-		//light.Draw();
-
-		// 3D 
-		gridShader.Use();
-		gridShader.SetUniform1f("nearPlane", nearPlane);
-		gridShader.SetUniform1f("farPlane", farPlane);
-		gridShader.SetUniformMat4f("projection", projection);
-		gridShader.SetUniformMat4f("view", view);
-
-		VAO_2->Bind();
-		EBO_2->Bind();
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		//VAO_2->Bind();
+		//EBO_2->Bind();
+		//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
 
-	delete VAO_2;
-	delete VBO_2;
-	delete EBO_2;
-	delete layout_2;
+	//delete VAO_2;
+	//delete VBO_2;
+	//delete EBO_2;
+	//delete layout_2;
 
 	glfwTerminate();
 	return 0;

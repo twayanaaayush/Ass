@@ -39,12 +39,14 @@ private:
 	float m_Zoom;
 
 public:
+	//Camera() = default;
 	Camera( glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f),
 		    glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f),
 		    float yaw = Cam::YAW,
 			float pitch = Cam::PITCH );
 
 	glm::mat4 GetViewMatrix();
+
 	void ProcessKeyboard(Cam::Camera_Movement direction, double deltaTime);
 	void ProcessMouseMovement(double xoffset, double yoffset, double deltaTime, bool constrainPitch = true);
 	void ProcessMouseScroll(double yoffset);
