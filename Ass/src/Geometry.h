@@ -17,7 +17,6 @@ namespace cube
     const float X = 0.5f;
     const float Y = 0.5f;
     const float Z = 0.5f;
-    //const float N = 1.0f;
 
     static const std::vector<Vertex> vertices =
     {
@@ -58,66 +57,6 @@ namespace cube
         {4, 3, 0},
         {4, 5, 3}
     };
-
-    //static const std::vector<Vertex> vertices_t =
-    //{
-    //    {glm::vec3(-X, -Y,  Z), glm::vec3(0.0, 0.0,  N)},
-    //    {glm::vec3(X, -Y,  Z), glm::vec3(0.0, 0.0,  N)},
-    //    {glm::vec3(X,  Y,  Z), glm::vec3(0.0, 0.0,  N)},
-    //    {glm::vec3(-X,  Y,  Z), glm::vec3(0.0, 0.0,  N)},
-
-    //    {glm::vec3(-X, -Y, -Z), glm::vec3(0.0, 0.0, -N)},
-    //    {glm::vec3(-X,  Y, -Z), glm::vec3(0.0, 0.0, -N)},
-    //    {glm::vec3(X,  Y, -Z), glm::vec3(0.0, 0.0, -N)},
-    //    {glm::vec3(X, -Y, -Z), glm::vec3(0.0, 0.0, -N)},
-
-    //    {glm::vec3(-X,  Y, -Z), glm::vec3(0.0,  N, 0.0)},
-    //    {glm::vec3(-X,  Y,  Z), glm::vec3(0.0,  N, 0.0)},
-    //    {glm::vec3(X,  Y,  Z), glm::vec3(0.0,  N, 0.0)},
-    //    {glm::vec3(X,  Y, -Z), glm::vec3(0.0,  N, 0.0)},
-
-    //    {glm::vec3(-X, -Y, -Z), glm::vec3(0.0, -N, 0.0)},
-    //    {glm::vec3(X, -Y, -Z), glm::vec3(0.0, -N, 0.0)},
-    //    {glm::vec3(X, -Y,  Z), glm::vec3(0.0, -N, 0.0)},
-    //    {glm::vec3(-X, -Y,  Z), glm::vec3(0.0, -N, 0.0)},
-
-    //    {glm::vec3(X, -Y, -Z), glm::vec3(N, 0.0, 0.0)},
-    //    {glm::vec3(X,  Y, -Z), glm::vec3(N, 0.0, 0.0)},
-    //    {glm::vec3(X,  Y,  Z), glm::vec3(N, 0.0, 0.0)},
-    //    {glm::vec3(X, -Y,  Z), glm::vec3(N, 0.0, 0.0)},
-
-    //    {glm::vec3(-X, -Y, -Z), glm::vec3(-N, 0.0, 0.0)},
-    //    {glm::vec3(-X, -Y,  Z), glm::vec3(-N, 0.0, 0.0)},
-    //    {glm::vec3(-X,  Y,  Z), glm::vec3(-N, 0.0, 0.0)},
-    //    {glm::vec3(-X,  Y, -Z), glm::vec3(-N, 0.0, 0.0)}
-    //};
-
-    //static const std::vector <Triangle> triangles_t =
-    //{
-    //    // front
-    //    {0,  1,  2},
-    //    {0,  2,  3},
-
-    //    // back
-    //    {4,  5,  6},
-    //    {4,  7,  6},
-
-    //    // top
-    //    {8,  9,  10},
-    //    {8,  10, 11},
-
-    //    // bottom
-    //    {12, 14, 13},
-    //    {12, 15, 14},
-
-    //    // right
-    //    {16, 17, 18},
-    //    {16, 18, 19},
-
-    //    // left
-    //    {20, 22, 21},
-    //    {20, 23, 22}
-    //};
 }
 
 namespace icosahedron

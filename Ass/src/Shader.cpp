@@ -119,15 +119,15 @@ void Shader::SetUniform1f(const std::string& name, float v)
 	glUniform1f(GetUniformLocation(name), v);
 }
 
-//void Shader::SetUniform4f(const std::string& name, float v0, float v1, float v2, float v3)
-//{
-//	glUniform4f(GetUniformLocation(name), v0, v1, v2, v3);
-//}
+void Shader::SetUniform4f(const std::string& name, float v0, float v1, float v2, float v3)
+{
+	glUniform4f(GetUniformLocation(name), v0, v1, v2, v3);
+}
 
-//void Shader::SetUniformVec4f(const std::string& name, glm::vec4 vec)
-//{
-//	glUniform4f(GetUniformLocation(name), vec.x, vec.y, vec.z, vec.w);
-//}
+void Shader::SetUniformVec4f(const std::string& name, glm::vec4 vec)
+{
+	glUniform4f(GetUniformLocation(name), vec.x, vec.y, vec.z, vec.w);
+}
 
 void Shader::SetUniformVec3f(const std::string& name, glm::vec3 vec)
 {
@@ -139,10 +139,10 @@ void Shader::SetUniformMat4f(const std::string& name, glm::mat4& mat)
 	glUniformMatrix4fv(GetUniformLocation(name), 1, GL_FALSE, glm::value_ptr(mat));
 }
 
-void Shader::SetUniformMaterial(const Material& material)
-{
-	SetUniformVec3f("material.ambient", material.ambient);
-	SetUniformVec3f("material.diffuse", material.diffuse);
-	SetUniformVec3f("material.specular", material.specular);
-	SetUniform1f("material.shininess", material.shininess);
-}
+//void Shader::SetUniformMaterial(const Material& material)
+//{
+//	SetUniformVec3f("material.ambient", material.ambient);
+//	SetUniformVec3f("material.diffuse", material.diffuse);
+//	SetUniformVec3f("material.specular", material.specular);
+//	SetUniform1f("material.shininess", material.shininess);
+//}

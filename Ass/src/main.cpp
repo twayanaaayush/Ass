@@ -13,14 +13,17 @@
 #include "Camera.h"
 #include "Mesh.h"
 #include "Light.h"
+#include "Material.h"
+//#include "MousePicking.h"
 
 const unsigned int WINDOW_WIDTH = 1024;
 const unsigned int WINDOW_HEIGHT = 780;
 
 bool WIREFRAME_SETTING = false;
 
-// camera
-Camera camera(glm::vec3(0.0f, 1.5f, 7.0f));
+Camera camera(glm::vec3(0.0f, 1.5f, 6.0f));
+Material g_material;
+
 double g_lastX, g_lastY;
 
 int buttonDown = -1;
@@ -33,7 +36,10 @@ float g_rotY_angle = 0.0f;
 double deltaTime = 0.0f;
 double lastTime = 0.0f;
 
-// light
+//glm::mat4 projection = glm::perspective(camera.GetZoom(), (float)(WINDOW_WIDTH / WINDOW_HEIGHT), nearPlane, farPlane);
+//glm::mat4 view = camera.GetViewMatrix();
+//glm::vec3 pos = glm::vec3(0.0f, 1.0f, 0.0f);
+
 Light g_light = {
 	glm::vec3(2.0f, 2.0f, 2.0f),
 	glm::vec3(0.2f, 0.2f, 0.2f),
@@ -41,13 +47,6 @@ Light g_light = {
 	glm::vec3(1.0f, 1.0f, 1.0f)
 };
 
-//Material
-Material g_material = {
-	glm::vec3(1.0f, 0.5f, 0.31f),
-	glm::vec3(1.0f, 0.5f, 0.31f),
-	glm::vec3(0.5f, 0.5f, 0.5f),
-	32.0f
-};
 
 // function declaration
 void frameBuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -57,6 +56,7 @@ void setWireframe();
 void cursor_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
+
 
 int main()
 {
@@ -99,7 +99,11 @@ int main()
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_MULTISAMPLE);
 
+	//glEnable(GL_CULL_FACE);
+	//glCullFace(GL_BACK);
+
 	// shaders
+	Shader BasicShader("res/shaders/BasicVertex.shader", "res/shaders/BasicFragment.shader");
 	Shader phongShader("res/shaders/PhongVertex.shader", "res/shaders/PhongFragment.shader");
 	//Shader gridShader("res/shaders/GridVertex.shader", "res/shaders/GridFragment.shader");
 
@@ -143,35 +147,37 @@ int main()
 		if (WIREFRAME_SETTING)
 		{
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+			BasicShader.Use();
+
+			BasicShader.SetUniformVec4f("color", glm::vec4(1.0f, 0.5f, 0.31f, 1.0f));
 		}
 		else
 		{
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+			phongShader.Use();
+			phongShader.SetUniformVec3f("light.position", g_light.position);
+			phongShader.SetUniformVec3f("light.ambient", g_light.ambient);
+			phongShader.SetUniformVec3f("light.diffuse", g_light.diffuse);
+			phongShader.SetUniformVec3f("light.specular", g_light.specular);
+			phongShader.SetUniformVec3f("viewPos", camera.GetPosition());
+			g_material.SetUniforms(phongShader);
 		}
-
-		// setting default uniforms
-		phongShader.Use();
-		phongShader.SetUniformVec3f("light.position", g_light.position);
-		phongShader.SetUniformVec3f("light.ambient", g_light.ambient);
-		phongShader.SetUniformVec3f("light.diffuse", g_light.diffuse);
-		phongShader.SetUniformVec3f("light.specular", g_light.specular);
-		phongShader.SetUniformVec3f("viewPos", camera.GetPosition());
-		phongShader.SetUniformMaterial(g_material);
-
 
 		glm::mat4 projection = glm::perspective(camera.GetZoom(), (float)(WINDOW_WIDTH / WINDOW_HEIGHT), nearPlane, farPlane);
 		glm::mat4 view = camera.GetViewMatrix();
-		glm::mat4 cube_model = glm::mat4(1.0f);
+		glm::mat4 model = glm::mat4(1.0f);
 
+		glm::vec3 pos = glm::vec3(0.0f, 1.0f, 0.0f);
 
-		cube_model = glm::scale(cube_model, glm::vec3(1.5f));
-		cube_model = glm::translate(cube_model, glm::vec3(0.0f, 1.0f, 0.0f));
-		cube_model = glm::rotate(cube_model, glm::radians(g_rotX_angle), glm::vec3(1.0f, 0.0f, 0.0f));
-		cube_model = glm::rotate(cube_model, glm::radians(g_rotY_angle), glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(1.0f));
+		model = glm::translate(model, pos);
+		model = glm::rotate(model, glm::radians(g_rotX_angle), glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::rotate(model, glm::radians(g_rotY_angle), glm::vec3(0.0f, 1.0f, 0.0f));
 
 		phongShader.SetUniformMat4f("projection", projection);
 		phongShader.SetUniformMat4f("view", view);
-		phongShader.SetUniformMat4f("model", cube_model);
+		phongShader.SetUniformMat4f("model", model);
 
 		// draw cube
 		//cube.Draw();
@@ -184,8 +190,8 @@ int main()
 		//gridShader.Use();
 		//gridShader.SetUniform1f("nearPlane", nearPlane);
 		//gridShader.SetUniform1f("farPlane", farPlane);
-		//gridShader.SetUniformMat4f("projection", projection);
-		//gridShader.SetUniformMat4f("view", view);
+		//gridShader.SetUniformMat4f("PROJECTION", PROJECTION);
+		//gridShader.SetUniformMat4f("VIEW", VIEW);
 
 		//VAO_2->Bind();
 		//EBO_2->Bind();
@@ -244,6 +250,23 @@ void cursor_callback(GLFWwindow* window, double xpos, double ypos)
 	{
 		g_rotX_angle += (float)((ypos - g_lastY) * camera.GetMouseSensitivity());
 		g_rotY_angle += (float)((xoffset) * camera.GetMouseSensitivity());
+
+		//glm::vec3 ray_wor = get_ray_from_mouse(WINDOW_WIDTH, WINDOW_HEIGHT, projection, view, xpos, ypos);
+
+		//int closest_sphere_clicked = -1;
+		//float closest_intersection = 0.0f;
+		//float t_dist = 0.0f;
+
+		//if (ray_sphere(camera.GetPosition(), ray_wor, pos, 1.0f, &t_dist)) {
+		//	// if more than one sphere is in path of ray, only use the closest one
+		//	if (closest_sphere_clicked == -1 || t_dist < closest_intersection) {
+		//		closest_sphere_clicked = 1;
+		//		closest_intersection = t_dist;
+
+		//		std::cout << closest_sphere_clicked << ", " << closest_intersection << std::endl;
+		//	}
+
+		//}
 	}
 
 	g_lastX = xpos;

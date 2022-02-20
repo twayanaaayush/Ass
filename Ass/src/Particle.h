@@ -22,7 +22,8 @@ public:
 	void SetVelocity(float velocity);
 	void SetPosition(float position);
 	void CalculateForce(float force);
-	void EnableGravity(bool val);
+	void UseGravity(bool val);
 
 	void Update(float deltaTime);
+	void Draw();
 };

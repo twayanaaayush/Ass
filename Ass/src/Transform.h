@@ -9,7 +9,7 @@ private:
 	glm::vec3 m_Scale;
 	glm::vec3 m_Rotate;
 	glm::vec3 m_Translate;
-	glm::mat4 ModelMatrix;
+	glm::mat4 m_ModelMatrix;
 
 public:
 	Transform() = default;
@@ -18,11 +18,19 @@ public:
 
 	void InitDefault();
 
-	void Scale_X(float factor);			void Scale_Y(float factor);			void Scale_Z(float factor);
-	void Rotate_X(float factor);		void Rotate_Y(float factor);		void Rotate_Z(float factor);
-	void Translate_X(float factor);		void Translate_Y(float factor);		void Translate_Z(float factor);
+	void SetScale(glm::vec3 factor);
+	void SetRotation(glm::vec3 angle);
+	void SetTranslation(glm::vec3 factor);
 
-	inline const glm::mat4& GetModelMatrix() const { return ModelMatrix; }
+	void Scale_X(float factor);			void Scale_Y(float factor);			void Scale_Z(float factor);
+	void Rotate_X(float angle);			void Rotate_Y(float angle);			void Rotate_Z(float angle);
+	void Translate_X(float factor);		void Translate_Y(float factor);		void Translate_Z(float factor);
+	
+	inline glm::mat4& GetModelMatrix() { return m_ModelMatrix; }
+	inline glm::vec3& GetScale()	   { return m_Scale; }
+	inline glm::vec3& GetRotation()	   { return m_Rotate; }
+	inline glm::vec3& GetTranslation() { return m_Translate; }
+
 private:
 	void UpdateModelMatrix();
 };
