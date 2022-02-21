@@ -21,9 +21,12 @@ Material::Material(
 	m_Shininess = shininess;
 }
 
-Material& Material::operator=(const Material& material)
+void Material::operator=(const Material& other)
 {
-
+	m_Ambient = other.GetAmbient();
+	m_Diffuse = other.GetDiffuse();
+	m_Specular = other.GetSpecular();
+	m_Shininess = other.GetShininess();
 }
 
 Material::~Material() {}
@@ -35,4 +38,24 @@ void Material::SetUniforms(Shader& shader) const
 	shader.SetUniformVec3f("material.diffuse", m_Diffuse);
 	shader.SetUniformVec3f("material.specular", m_Specular);
 	shader.SetUniform1f("material.shininess", m_Shininess);
+}
+
+void Material::SetAmbient(glm::vec3 ambient)
+{
+	m_Ambient = ambient;
+}
+
+void Material::SetDiffuse(glm::vec3 diffuse)
+{
+	m_Diffuse = diffuse;
+}
+
+void Material::SetSpecular(glm::vec3 specular)
+{
+	m_Specular = specular;
+}
+
+void Material::SetShininess(float shininess)
+{
+	m_Shininess = shininess;
 }

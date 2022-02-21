@@ -1,2 +1,25 @@
-﻿  main.cpp
+﻿  Material.cpp
+  Mesh.cpp
+D:\programs\C\cpp\Ass\Ass\src\Mesh.cpp(40,120): warning C4267: 'argument': conversion from 'size_t' to 'unsigned int', possible loss of data
+D:\programs\C\cpp\Ass\Ass\src\Mesh.cpp(59,96): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30133\include\utility(193,48): warning C4267: 'initializing': conversion from 'size_t' to '_Ty2', possible loss of data
+          with
+          [
+              _Ty2=Index
+          ]
+D:\programs\C\cpp\Ass\Ass\src\Mesh.cpp(68): message : see reference to function template instantiation 'std::pair<const std::pair<Index,Index>,Index>::pair<std::pair<Index,Index>&,unsigned __int64,0>(_Other1,_Other2 &&) noexcept' being compiled
+          with
+          [
+              _Other1=std::pair<Index,Index> &,
+              _Other2=unsigned __int64
+          ]
+D:\programs\C\cpp\Ass\Ass\src\Mesh.cpp(68): message : see reference to function template instantiation 'std::pair<const std::pair<Index,Index>,Index>::pair<std::pair<Index,Index>&,unsigned __int64,0>(_Other1,_Other2 &&) noexcept' being compiled
+          with
+          [
+              _Other1=std::pair<Index,Index> &,
+              _Other2=unsigned __int64
+          ]
+  Shader.cpp
+  main.cpp
+  Generating Code...
   Ass.vcxproj -> D:\programs\C\cpp\Ass\x64\Debug\Ass.exe

@@ -5,8 +5,12 @@ constexpr int GRAVITY = 9.8;
 class Particle
 {
 private:
-	float m_Mass, m_Velocity, m_Position, m_ForceAccumulated;
+	float m_Mass;
+	float m_Velocity;
+	float m_Position;
+	float m_ForceAccumulated;
 	bool m_Gravity = false;
+
 public:
 	Particle() = default;
 	Particle(const Particle& other);

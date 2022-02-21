@@ -21,12 +21,12 @@ public:
     );
     ~Material();
 
-    Material& operator = (const Material& other);
+    void operator = (const Material& other);
 
     void SetAmbient(glm::vec3 ambient);
     void SetDiffuse(glm::vec3 diffuse);
     void SetSpecular(glm::vec3 specular);
-    void SetShininess(glm::vec3 shininess);
+    void SetShininess(float shininess);
 
     void SetUniforms(Shader& shader) const;
 

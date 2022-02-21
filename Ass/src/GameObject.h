@@ -21,7 +21,7 @@ public:
 
 	inline Mesh* GetMesh() const { return m_Mesh; }
 	inline Material* GetMaterial() const { return m_Material; }
-	inline Transform GetTransform() { return m_Transform; }
+	inline Transform& GetTransform() { return m_Transform; }
 
 	void Update();
 	void Draw();

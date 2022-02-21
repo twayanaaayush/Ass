@@ -26,14 +26,11 @@ protected:
 	std::vector<Vertex> m_Vertices;
 	std::vector<Triangle> m_Indices;
 
-	//Shader* shader;
-
 public:
 	Mesh();
 	Mesh(std::vector<Vertex> vertices, std::vector<Triangle> indices);
 	~Mesh();
 	void Draw() const;
-	//void SetShader(Shader* shader);
 	void SetVertices(std::vector<Vertex> vertices);
 	void SetIndices(std::vector<Triangle> indices);
 	void UpdateBuffers();
