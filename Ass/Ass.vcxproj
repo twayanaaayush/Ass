@@ -78,12 +78,12 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)\Linking\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)\Linking\include;$(SolutionDir)\Ass\src\headers;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)\Linking\lib;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)\Linking\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)\Linking\include;$(SolutionDir)\Ass\src\headers;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)\Linking\lib;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -145,35 +145,40 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\GameObject.cpp" />
     <ClCompile Include="src\glad.c" />
     <ClCompile Include="src\IndexBuffer.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Material.cpp" />
     <ClCompile Include="src\Mesh.cpp" />
-    <ClCompile Include="src\MousePicking.h" />
+    <ClCompile Include="src\headers\MousePicking.h" />
+    <ClCompile Include="src\Particle.cpp" />
+    <ClCompile Include="src\Renderer.cpp" />
     <ClCompile Include="src\Shader.cpp" />
     <ClCompile Include="src\Camera.cpp" />
+    <ClCompile Include="src\Spring.cpp" />
     <ClCompile Include="src\VertexArray.cpp" />
     <ClCompile Include="src\VertexBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\BufferLayout.h" />
-    <ClInclude Include="src\Camera.h" />
-    <ClInclude Include="src\GameObject.h" />
-    <ClInclude Include="src\Geometry.h" />
-    <ClInclude Include="src\IndexBuffer.h" />
-    <ClInclude Include="src\Light.h" />
-    <ClInclude Include="src\Manager.h" />
-    <ClInclude Include="src\Material.h" />
-    <ClInclude Include="src\Mesh.h" />
-    <ClInclude Include="src\Particle.h" />
-    <ClInclude Include="src\Renderer.h" />
-    <ClInclude Include="src\Scene.h" />
-    <ClInclude Include="src\Shader.h" />
-    <ClInclude Include="src\Transform.h" />
-    <ClInclude Include="src\Vertex.h" />
-    <ClInclude Include="src\VertexArray.h" />
-    <ClInclude Include="src\VertexBuffer.h" />
+    <ClInclude Include="src\headers\BufferLayout.h" />
+    <ClInclude Include="src\headers\Camera.h" />
+    <ClInclude Include="src\headers\GameObject.h" />
+    <ClInclude Include="src\headers\Geometry.h" />
+    <ClInclude Include="src\headers\IndexBuffer.h" />
+    <ClInclude Include="src\headers\Light.h" />
+    <ClInclude Include="src\headers\Manager.h" />
+    <ClInclude Include="src\headers\Material.h" />
+    <ClInclude Include="src\headers\Mesh.h" />
+    <ClInclude Include="src\headers\Particle.h" />
+    <ClInclude Include="src\headers\Renderer.h" />
+    <ClInclude Include="src\headers\Scene.h" />
+    <ClInclude Include="src\headers\Shader.h" />
+    <ClInclude Include="src\headers\Spring.h" />
+    <ClInclude Include="src\headers\Transform.h" />
+    <ClInclude Include="src\headers\Vertex.h" />
+    <ClInclude Include="src\headers\VertexArray.h" />
+    <ClInclude Include="src\headers\VertexBuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\BasicFragment.shader" />
