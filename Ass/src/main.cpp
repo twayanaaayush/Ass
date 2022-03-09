@@ -18,6 +18,7 @@
 #include "GameObject.h"
 #include "Renderer.h"
 #include "Scene.h"
+#include "soft bodies/Softbody.h"
 
 const unsigned int WINDOW_WIDTH = 1024;
 const unsigned int WINDOW_HEIGHT = 780;
@@ -97,22 +98,23 @@ int main()
 	Shader gridShader("res/shaders/GridVertex.shader", "res/shaders/GridFragment.shader");
 
 	// Meshes
-	std::shared_ptr<Mesh>cube_mesh = std::make_shared<Mesh>(cube::vertices, cube::triangles);
-	std::shared_ptr<Mesh>icosphere_mesh = std::make_shared<Mesh>();
+	//std::shared_ptr<Mesh>cube_mesh = std::make_shared<Mesh>(cube::vertices, cube::triangles);
+	//std::shared_ptr<Mesh>icosphere_mesh = std::make_shared<Mesh>();
 
-	std::unique_ptr<GameObject>cube = std::make_unique<GameObject>(cube_mesh, g_material);
-	std::unique_ptr<GameObject>icosphere = std::make_unique<GameObject>(icosphere_mesh, g_material);
+	//std::unique_ptr<GameObject>cube = std::make_unique<GameObject>(cube_mesh, g_material);
+	//std::unique_ptr<GameObject>icosphere = std::make_unique<GameObject>(icosphere_mesh, g_material);
 
-	std::shared_ptr<std::vector<std::unique_ptr<GameObject>>> renderObjects =
-		std::make_shared<std::vector<std::unique_ptr<GameObject>>>();
+	//std::shared_ptr<std::vector<std::unique_ptr<GameObject>>> renderObjects =
+	//	std::make_shared<std::vector<std::unique_ptr<GameObject>>>();
 
-	(*renderObjects).push_back(std::move(cube));
-	(*renderObjects).push_back(std::move(icosphere));
+	//(*renderObjects).push_back(std::move(cube));
+	//(*renderObjects).push_back(std::move(icosphere));
 
-	Renderer renderer(renderObjects, g_light);
-	renderer.AddShader(phongShader);
+	//Renderer renderer(renderObjects, g_light);
+	//renderer.AddShader(phongShader);
 
 	Scene scene(camera);
+	Softbody ball(1);
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -148,8 +150,8 @@ int main()
 
 		//(*phongShader).SetUniformMat4f("model", model);
 
-		renderer.UpdateAll(g_rotX_angle, g_rotY_angle);
-		renderer.RenderAll(*camera);
+		//renderer.UpdateAll(g_rotX_angle, g_rotY_angle);
+		//renderer.RenderAll(*camera);
 
 		scene.SetGridUniforms(gridShader);
 		scene.DrawGrid();

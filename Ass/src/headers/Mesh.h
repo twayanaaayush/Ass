@@ -31,8 +31,12 @@ public:
 	~Mesh();
 	void SetVertices(std::vector<Vertex> vertices);
 	void SetIndices(std::vector<Triangle> indices);
+
 	void UpdateBuffers();
 	void Draw() const;
+
+	inline const std::vector<Vertex>& GetVertices() { return m_Vertices; }
+	inline const std::vector<Triangle>& GetIndices() { return m_Indices; }
 
 protected:
 	void InitBuffers();

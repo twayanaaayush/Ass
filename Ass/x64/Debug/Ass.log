@@ -1,2 +1,5 @@
-﻿  Transform.cpp
+﻿  Softbody.cpp
+D:\programs\C\cpp\Ass\Ass\src\headers\Particle.h(5,21): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+D:\programs\C\cpp\Ass\Ass\src\headers\Particle.h(6,32): warning C4305: 'initializing': truncation from 'double' to 'float'
+D:\programs\C\cpp\Ass\Ass\src\soft bodies\Softbody.cpp(29,51): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned int', possible loss of data
   Ass.vcxproj -> D:\programs\C\cpp\Ass\x64\Debug\Ass.exe

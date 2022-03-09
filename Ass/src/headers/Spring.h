@@ -7,12 +7,13 @@ class Spring
 {
 private:
 	float m_RestLength;
-	Particle* m_EndOne, *m_EndTwo;
+	std::shared_ptr<Particle> m_EndOne;
+	std::shared_ptr<Particle> m_EndTwo;
 	float m_SpringConstant;
 	glm::vec3 m_NormalVec;
 
 public:
-	Spring(Particle* endOne, Particle* endTwo);
+	Spring(std::shared_ptr<Particle> endOne, std::shared_ptr<Particle> endTwo);
 	~Spring();
 
 	void SetRestLength(float length);

@@ -1,33 +1,34 @@
 #pragma once
 
-constexpr int GRAVITY = 9.8;
+#include <glm/glm.hpp>
+
+const int GRAVITY = 9.8;
+const float PARTICLE_MASS = 0.1;
 
 class Particle
 {
 private:
 	float m_Mass;
-	float m_Velocity;
-	float m_Position;
+	glm::vec3 m_Velocity;
+	glm::vec3 m_Position;
 	float m_ForceAccumulated;
 	bool m_Gravity = false;
 
 public:
 	Particle() = default;
 	Particle(const Particle& other);
-	Particle(float mass, float velocity, float position);
-
-	void InitDefault();
+	Particle(float mass, glm::vec3 velocity, glm::vec3 position);
+	Particle(glm::vec3 position);
 
 	inline float GetMass() const { return m_Mass; }
-	inline float GetVelocity() const { return m_Velocity; }
-	inline float GetPosition() const { return m_Position; }
+	inline glm::vec3& GetVelocity() { return m_Velocity; }
+	inline glm::vec3& GetPosition() { return m_Position; }
 
 	void SetMass(float mass);
-	void SetVelocity(float velocity);
-	void SetPosition(float position);
-	void CalculateForce(float force);
+	void SetVelocity(glm::vec3 velocity);
+	void SetPosition(glm::vec3 position);
+	void AddForce(float force);
 	void UseGravity(bool val);
 
 	void Update(float deltaTime);
-	void Draw();
 };

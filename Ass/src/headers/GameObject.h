@@ -6,7 +6,7 @@
 
 class GameObject
 {
-private:
+protected:
 	std::shared_ptr<Mesh> m_Mesh;
 	std::shared_ptr<Material> m_Material;
 	Transform m_Transform;
