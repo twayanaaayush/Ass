@@ -4,7 +4,6 @@
 #include <vector>
 #include <map>
 #include <array>
-#include "Vertex.h"
 #include "Geometry.h"
 #include "Material.h"
 #include "VertexArray.h"

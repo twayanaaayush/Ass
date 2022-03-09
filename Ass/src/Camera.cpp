@@ -94,3 +94,21 @@ void Camera::UpdateCameraVectors()
 	m_Right = glm::normalize(glm::cross(m_Front, m_WorldUp));  // normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
 	m_Up = glm::normalize(glm::cross(m_Right, m_Front));
 }
+
+void Camera::SetUniforms(Shader& shader, glm::mat4& transform)
+{
+	shader.Use();
+
+	glm::mat4 projection = glm::perspective(GetZoom(), (float)(WINDOW_WIDTH / WINDOW_HEIGHT), NEAR_PLANE, FAR_PLANE);
+	glm::mat4 view = GetViewMatrix();
+
+	shader.SetUniformMat4f("projection", projection);
+	shader.SetUniformMat4f("view", view);
+	shader.SetUniformMat4f("model", transform);
+}
+
+void Camera::SetUniformViewPos(Shader& shader)
+{
+	glm::vec3 viewPos = GetPosition();
+	shader.SetUniformVec3f("viewPos", viewPos);
+}

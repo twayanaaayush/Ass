@@ -3,7 +3,11 @@
 #include <glm/glm.hpp>
 #include <iostream>
 #include <vector>
-#include "Vertex.h"
+
+struct Vertex
+{
+    glm::vec3 Position;
+};
 
 struct Triangle
 {
@@ -109,4 +113,19 @@ namespace icosahedron
         {9,  2,  5},
         {7,  2,  11}
     }; 
+}
+
+namespace Plane
+{
+    static const std::vector<Vertex> grid = {
+        {glm::vec3(1.0f,  1.0f, 0.0f)},
+        {glm::vec3(1.0f, -1.0f, 0.0f)},
+        {glm::vec3(-1.0f, -1.0f, 0.0f)},
+        {glm::vec3(-1.0f,  1.0f, 0.0f)}
+    };
+
+    static const std::vector<Triangle> gridIndices = {
+        {0,  1,  3},
+        {1,  2,  3}
+    };
 }

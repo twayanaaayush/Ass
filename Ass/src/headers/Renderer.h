@@ -7,19 +7,22 @@
 #include "Shader.h"
 #include "Camera.h"
 
+using RenderObjects = std::shared_ptr<std::vector<std::unique_ptr<GameObject>>>;
+
 class Renderer
 {
 private:
-	std::vector<GameObject>* m_RenderObjects = nullptr;
-	std::vector<Light>* m_Lights = nullptr;
-	Shader* m_Shader = nullptr;
+	RenderObjects m_RenderObjects;
+	std::shared_ptr<Light> m_Light;
+	std::shared_ptr<Shader> m_Shader;
 
 public:
-	Renderer(std::vector<GameObject>* renderObjects);
-	Renderer(std::vector<GameObject>* renderObjects, std::vector<Light>* lights);
+	Renderer(RenderObjects renderObjects);
+	Renderer(RenderObjects renderObjects, std::shared_ptr<Light> light);
 	~Renderer();
 
-	void AddShader(const std::string& vShaderFilePath, const std::string& fShaderFilePath);
+	void AddShader(std::shared_ptr<Shader> shader);
+	void UpdateAll(float g_rotX_angle, float g_rotY_angle);
 	void RenderAll(Camera& camera);
 
 };

@@ -15,38 +15,30 @@
 #include "Light.h"
 #include "Material.h"
 //#include "MousePicking.h"
+#include "GameObject.h"
+#include "Renderer.h"
+#include "Scene.h"
 
 const unsigned int WINDOW_WIDTH = 1024;
 const unsigned int WINDOW_HEIGHT = 780;
+const float NEAR_PLANE = 0.1f;
+const float FAR_PLANE = 100.0f;
 
 bool WIREFRAME_SETTING = false;
 
-Camera camera(glm::vec3(0.0f, 1.5f, 6.0f));
-Material g_material;
+std::shared_ptr<Camera> camera = std::make_shared<Camera>(glm::vec3(0.0f, 1.5f, 6.0f));
+std::shared_ptr<Material> g_material = std::make_shared<Material>();
+std::shared_ptr<Light> g_light = std::make_shared<Light>();
 
 double g_lastX, g_lastY;
 
 int buttonDown = -1;
-
-float nearPlane = 0.1f, farPlane = 100.0f;
 
 float g_rotX_angle = 0.0f;
 float g_rotY_angle = 0.0f;
 
 double deltaTime = 0.0f;
 double lastTime = 0.0f;
-
-//glm::mat4 projection = glm::perspective(camera.GetZoom(), (float)(WINDOW_WIDTH / WINDOW_HEIGHT), nearPlane, farPlane);
-//glm::mat4 view = camera.GetViewMatrix();
-//glm::vec3 pos = glm::vec3(0.0f, 1.0f, 0.0f);
-
-Light g_light = {
-	glm::vec3(2.0f, 2.0f, 2.0f),
-	glm::vec3(0.2f, 0.2f, 0.2f),
-	glm::vec3(0.5f, 0.5f, 0.5f),
-	glm::vec3(1.0f, 1.0f, 1.0f)
-};
-
 
 // function declaration
 void frameBuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -98,40 +90,29 @@ int main()
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_MULTISAMPLE);
-
-	//glEnable(GL_CULL_FACE);
-	//glCullFace(GL_BACK);
-
+	
 	// shaders
+	std::shared_ptr<Shader> phongShader(new Shader("res/shaders/PhongVertex.shader", "res/shaders/PhongFragment.shader"));
 	Shader BasicShader("res/shaders/BasicVertex.shader", "res/shaders/BasicFragment.shader");
-	Shader phongShader("res/shaders/PhongVertex.shader", "res/shaders/PhongFragment.shader");
-	//Shader gridShader("res/shaders/GridVertex.shader", "res/shaders/GridFragment.shader");
+	Shader gridShader("res/shaders/GridVertex.shader", "res/shaders/GridFragment.shader");
 
 	// Meshes
-	Mesh cube(cube::vertices, cube::triangles);
-	Mesh icosphere;
+	std::shared_ptr<Mesh>cube_mesh = std::make_shared<Mesh>(cube::vertices, cube::triangles);
+	std::shared_ptr<Mesh>icosphere_mesh = std::make_shared<Mesh>();
 
-	/*std::vector<Vertex> grid = {
-		{glm::vec3(1.0f,  1.0f, 0.0f)},
-		{glm::vec3(1.0f, -1.0f, 0.0f)},
-		{glm::vec3(-1.0f, -1.0f, 0.0f)},
-		{glm::vec3(-1.0f,  1.0f, 0.0f)}
-	};
+	std::unique_ptr<GameObject>cube = std::make_unique<GameObject>(cube_mesh, g_material);
+	std::unique_ptr<GameObject>icosphere = std::make_unique<GameObject>(icosphere_mesh, g_material);
 
-	std::vector<Triangle> gridIndices = {
-		{0,  1,  3},
-		{1,  2,  3}
-	};
+	std::shared_ptr<std::vector<std::unique_ptr<GameObject>>> renderObjects =
+		std::make_shared<std::vector<std::unique_ptr<GameObject>>>();
 
-	VertexArray* VAO_2 = new VertexArray();
-	VertexBuffer* VBO_2 = new VertexBuffer(&grid[0], 4 * 3 * sizeof(Vertex));
-	IndexBuffer* EBO_2 = new IndexBuffer(reinterpret_cast<unsigned int*>(&gridIndices[0]), gridIndices.size()*3);
-	BufferLayout* layout_2 = new BufferLayout();
+	(*renderObjects).push_back(std::move(cube));
+	(*renderObjects).push_back(std::move(icosphere));
 
-	layout_2->Add<float>(3);
+	Renderer renderer(renderObjects, g_light);
+	renderer.AddShader(phongShader);
 
-	VAO_2->AddBuffer(*VBO_2, *layout_2);
-	VAO_2->Unbind();*/
+	Scene scene(camera);
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -148,63 +129,34 @@ int main()
 		{
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 			BasicShader.Use();
-
 			BasicShader.SetUniformVec4f("color", glm::vec4(1.0f, 0.5f, 0.31f, 1.0f));
 		}
 		else
 		{
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-			phongShader.Use();
-			phongShader.SetUniformVec3f("light.position", g_light.position);
-			phongShader.SetUniformVec3f("light.ambient", g_light.ambient);
-			phongShader.SetUniformVec3f("light.diffuse", g_light.diffuse);
-			phongShader.SetUniformVec3f("light.specular", g_light.specular);
-			phongShader.SetUniformVec3f("viewPos", camera.GetPosition());
-			g_material.SetUniforms(phongShader);
 		}
 
-		glm::mat4 projection = glm::perspective(camera.GetZoom(), (float)(WINDOW_WIDTH / WINDOW_HEIGHT), nearPlane, farPlane);
-		glm::mat4 view = camera.GetViewMatrix();
-		glm::mat4 model = glm::mat4(1.0f);
+		//glm::mat4 model = glm::mat4(1.0f);
 
-		glm::vec3 pos = glm::vec3(0.0f, 1.0f, 0.0f);
+		//glm::vec3 pos = glm::vec3(0.0f, 1.0f, 0.0f);
 
-		model = glm::scale(model, glm::vec3(1.0f));
-		model = glm::translate(model, pos);
-		model = glm::rotate(model, glm::radians(g_rotX_angle), glm::vec3(1.0f, 0.0f, 0.0f));
-		model = glm::rotate(model, glm::radians(g_rotY_angle), glm::vec3(0.0f, 1.0f, 0.0f));
+		//model = glm::scale(model, glm::vec3(1.0f));
+		//model = glm::translate(model, pos);
+		//model = glm::rotate(model, glm::radians(g_rotX_angle), glm::vec3(1.0f, 0.0f, 0.0f));
+		//model = glm::rotate(model, glm::radians(g_rotY_angle), glm::vec3(0.0f, 1.0f, 0.0f));
 
-		phongShader.SetUniformMat4f("projection", projection);
-		phongShader.SetUniformMat4f("view", view);
-		phongShader.SetUniformMat4f("model", model);
+		//(*phongShader).SetUniformMat4f("model", model);
 
-		// draw cube
-		//cube.Draw();
+		renderer.UpdateAll(g_rotX_angle, g_rotY_angle);
+		renderer.RenderAll(*camera);
 
-		// draw icosahedron
-		icosphere.Draw();
-
-
-		//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		//gridShader.Use();
-		//gridShader.SetUniform1f("nearPlane", nearPlane);
-		//gridShader.SetUniform1f("farPlane", farPlane);
-		//gridShader.SetUniformMat4f("PROJECTION", PROJECTION);
-		//gridShader.SetUniformMat4f("VIEW", VIEW);
-
-		//VAO_2->Bind();
-		//EBO_2->Bind();
-		//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		scene.SetGridUniforms(gridShader);
+		scene.DrawGrid();
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
-
-	//delete VAO_2;
-	//delete VBO_2;
-	//delete EBO_2;
-	//delete layout_2;
 
 	glfwTerminate();
 	return 0;
@@ -218,20 +170,20 @@ void frameBuffer_size_callback(GLFWwindow* window, int width, int height)
 void processInput(GLFWwindow* window, double deltaTime)
 {
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-		camera.ProcessKeyboard(Cam::Camera_Movement::FORWARD, deltaTime);
+		(*camera).ProcessKeyboard(Cam::Camera_Movement::FORWARD, deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-		camera.ProcessKeyboard(Cam::Camera_Movement::BACKWARD, deltaTime);
+		(*camera).ProcessKeyboard(Cam::Camera_Movement::BACKWARD, deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-		camera.ProcessKeyboard(Cam::Camera_Movement::LEFT, deltaTime);
+		(*camera).ProcessKeyboard(Cam::Camera_Movement::LEFT, deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-		camera.ProcessKeyboard(Cam::Camera_Movement::RIGHT, deltaTime);
+		(*camera).ProcessKeyboard(Cam::Camera_Movement::RIGHT, deltaTime);
 }
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)
 {
 	if( key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) glfwSetWindowShouldClose(window, true);
 	if (key == GLFW_KEY_E && action == GLFW_PRESS) setWireframe();
-	if (key == GLFW_KEY_R && action == GLFW_PRESS) camera.ResetPosition();
+	if (key == GLFW_KEY_R && action == GLFW_PRESS) (*camera).ResetPosition();
 }
 
 void setWireframe()
@@ -244,12 +196,12 @@ void cursor_callback(GLFWwindow* window, double xpos, double ypos)
 	double xoffset = xpos - g_lastX;
 	double yoffset = g_lastY - ypos; // reversed since y-coordinates go from bottom to top
 
-	if (buttonDown == 1) camera.ProcessMouseMovement(xoffset, yoffset, deltaTime);
+	if (buttonDown == 1) (*camera).ProcessMouseMovement(xoffset, yoffset, deltaTime);
 
 	if (buttonDown == 0)
 	{
-		g_rotX_angle += (float)((ypos - g_lastY) * camera.GetMouseSensitivity());
-		g_rotY_angle += (float)((xoffset) * camera.GetMouseSensitivity());
+		g_rotX_angle += (float)((ypos - g_lastY) * (*camera).GetMouseSensitivity());
+		g_rotY_angle += (float)((xoffset) * (*camera).GetMouseSensitivity());
 
 		//glm::vec3 ray_wor = get_ray_from_mouse(WINDOW_WIDTH, WINDOW_HEIGHT, projection, view, xpos, ypos);
 
@@ -275,7 +227,7 @@ void cursor_callback(GLFWwindow* window, double xpos, double ypos)
 
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
-	camera.ProcessMouseScroll(yoffset);
+	(*camera).ProcessMouseScroll(yoffset);
 }
 
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)

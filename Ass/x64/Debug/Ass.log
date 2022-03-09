@@ -1,3 +1,2 @@
-﻿  GameObject.cpp
-GameObject.obj : error LNK2019: unresolved external symbol "public: void __cdecl Transform::operator=(class Transform const &)" (??4Transform@@QEAAXAEBV0@@Z) referenced in function "public: __cdecl GameObject::GameObject(class Mesh *,struct Material const &,class Transform const &)" (??0GameObject@@QEAA@PEAVMesh@@AEBUMaterial@@AEBVTransform@@@Z)
-D:\programs\C\cpp\Ass\x64\Debug\Ass.exe : fatal error LNK1120: 1 unresolved externals
+﻿  Transform.cpp
+  Ass.vcxproj -> D:\programs\C\cpp\Ass\x64\Debug\Ass.exe

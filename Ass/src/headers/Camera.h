@@ -2,6 +2,12 @@
 
 #include <glad/glad.h>
 #include <glm/glm.hpp>
+#include "Shader.h"
+
+extern const unsigned int WINDOW_WIDTH;
+extern const unsigned int WINDOW_HEIGHT;
+extern const float NEAR_PLANE;
+extern const float FAR_PLANE;
 
 namespace Cam
 {
@@ -38,6 +44,8 @@ private:
 	float m_MouseSensitivity;
 	float m_Zoom;
 
+	std::shared_ptr<Shader> shader;
+
 public:
 	//Camera() = default;
 	Camera( glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f),
@@ -56,6 +64,9 @@ public:
 	inline float GetMouseSensitivity() const { return m_MouseSensitivity; }
 	inline float GetZoom() const { return m_Zoom; }
 	inline glm::vec3 GetPosition() const { return m_Position; }
+
+	void SetUniforms(Shader& shader, glm::mat4& transform);
+	void SetUniformViewPos(Shader& shader);
 
 private:
 	void UpdateCameraVectors();

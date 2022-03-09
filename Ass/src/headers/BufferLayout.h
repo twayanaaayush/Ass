@@ -2,7 +2,6 @@
 
 #include <GLAD/glad.h>
 #include <vector>
-#include "Vertex.h"
 
 struct VertexAttrib
 {
