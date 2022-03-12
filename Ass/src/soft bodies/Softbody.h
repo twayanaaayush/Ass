@@ -15,7 +15,7 @@ private:
 public:
 	Softbody(unsigned int selector);
 
-	void Update();
+	//void Update();
 
 private:
 	void AddParticles();

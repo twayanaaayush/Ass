@@ -6,7 +6,6 @@ Particle::Particle(const Particle& other)
 	m_Velocity = other.m_Velocity;	
 	m_Position = other.m_Position;
 	m_ForceAccumulated = other.m_ForceAccumulated;
-	m_Gravity = other.m_Gravity;
 }
 
 Particle::Particle(float mass, glm::vec3 velocity, glm::vec3 position)
@@ -21,24 +20,18 @@ void Particle::SetMass(float mass)
 {
 	m_Mass = mass;
 }
+
 void Particle::SetVelocity(glm::vec3 velocity)
 {
 	m_Velocity = velocity;
 }
+
 void Particle::SetPosition(glm::vec3 position)
 {
 	m_Position = position;
 }
+
 void Particle::AddForce(float force)
 {
 	m_ForceAccumulated += force;
-}
-void Particle::UseGravity(bool val)
-{
-	m_Gravity = val;
-}
-
-void Particle::Update(float deltaTime)
-{
-
 }

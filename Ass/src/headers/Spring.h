@@ -1,7 +1,10 @@
 #pragma once
 
+#include <iostream>
 #include "Particle.h"
 #include <glm/glm.hpp>
+
+const int SPRING_CONSTANT = 0.1;
 
 class Spring
 {

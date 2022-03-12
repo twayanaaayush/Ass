@@ -2,7 +2,6 @@
 
 #include <glm/glm.hpp>
 
-const int GRAVITY = 9.8;
 const float PARTICLE_MASS = 0.1;
 
 class Particle
@@ -12,7 +11,6 @@ private:
 	glm::vec3 m_Velocity;
 	glm::vec3 m_Position;
 	float m_ForceAccumulated;
-	bool m_Gravity = false;
 
 public:
 	Particle() = default;
@@ -28,7 +26,4 @@ public:
 	void SetVelocity(glm::vec3 velocity);
 	void SetPosition(glm::vec3 position);
 	void AddForce(float force);
-	void UseGravity(bool val);
-
-	void Update(float deltaTime);
 };

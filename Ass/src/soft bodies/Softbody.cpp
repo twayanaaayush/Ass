@@ -3,7 +3,7 @@
 Softbody::Softbody(unsigned int selector)
 {
 	// load mesh
-	// 0 = cube, 1 = sphere
+	// 0 = sphere, 1 = cube
 	if (selector == 0) m_Mesh = std::make_shared<Mesh>();
 	else if (selector == 1) m_Mesh = std::make_shared<Mesh>(cube::vertices, cube::triangles);
 
@@ -44,10 +44,11 @@ void Softbody::AddSprings()
 std::shared_ptr<Spring> Softbody::MakeSpring(std::shared_ptr<Particle> endOne, std::shared_ptr<Particle> endTwo)
 {
 	std::shared_ptr<Spring> spring = std::make_shared<Spring>(endOne, endTwo);
+	//std::cout << (*spring).GetRestLength() << std::endl;
 	return spring;
 }
 
-void Softbody::Update()
-{
-
-}
+//void Softbody::Update()
+//{
+//
+//}

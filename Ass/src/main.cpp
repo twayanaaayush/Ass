@@ -25,7 +25,7 @@ const unsigned int WINDOW_HEIGHT = 780;
 const float NEAR_PLANE = 0.1f;
 const float FAR_PLANE = 100.0f;
 
-bool WIREFRAME_SETTING = false;
+bool WIREFRAME_SETTING = true;
 
 std::shared_ptr<Camera> camera = std::make_shared<Camera>(glm::vec3(0.0f, 1.5f, 6.0f));
 std::shared_ptr<Material> g_material = std::make_shared<Material>();
@@ -94,27 +94,18 @@ int main()
 	
 	// shaders
 	std::shared_ptr<Shader> phongShader(new Shader("res/shaders/PhongVertex.shader", "res/shaders/PhongFragment.shader"));
-	Shader BasicShader("res/shaders/BasicVertex.shader", "res/shaders/BasicFragment.shader");
 	Shader gridShader("res/shaders/GridVertex.shader", "res/shaders/GridFragment.shader");
 
-	// Meshes
-	//std::shared_ptr<Mesh>cube_mesh = std::make_shared<Mesh>(cube::vertices, cube::triangles);
-	//std::shared_ptr<Mesh>icosphere_mesh = std::make_shared<Mesh>();
-
-	//std::unique_ptr<GameObject>cube = std::make_unique<GameObject>(cube_mesh, g_material);
-	//std::unique_ptr<GameObject>icosphere = std::make_unique<GameObject>(icosphere_mesh, g_material);
-
-	//std::shared_ptr<std::vector<std::unique_ptr<GameObject>>> renderObjects =
-	//	std::make_shared<std::vector<std::unique_ptr<GameObject>>>();
-
-	//(*renderObjects).push_back(std::move(cube));
-	//(*renderObjects).push_back(std::move(icosphere));
-
-	//Renderer renderer(renderObjects, g_light);
-	//renderer.AddShader(phongShader);
+	std::shared_ptr<std::vector<std::unique_ptr<Softbody>>> renderObjects =
+	std::make_shared<std::vector<std::unique_ptr<Softbody>>>();
 
 	Scene scene(camera);
-	Softbody ball(1);
+	std::unique_ptr<Softbody> ball = std::make_unique<Softbody>(0);
+
+	(*renderObjects).push_back(std::move(ball));
+
+	Renderer<Softbody> renderer(renderObjects, g_light);
+	renderer.AddShader(phongShader);
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -130,28 +121,16 @@ int main()
 		if (WIREFRAME_SETTING)
 		{
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-			BasicShader.Use();
-			BasicShader.SetUniformVec4f("color", glm::vec4(1.0f, 0.5f, 0.31f, 1.0f));
+			renderer.EnableWireframe();
 		}
 		else
 		{
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
+			renderer.DisableWireframe();
 		}
 
-		//glm::mat4 model = glm::mat4(1.0f);
-
-		//glm::vec3 pos = glm::vec3(0.0f, 1.0f, 0.0f);
-
-		//model = glm::scale(model, glm::vec3(1.0f));
-		//model = glm::translate(model, pos);
-		//model = glm::rotate(model, glm::radians(g_rotX_angle), glm::vec3(1.0f, 0.0f, 0.0f));
-		//model = glm::rotate(model, glm::radians(g_rotY_angle), glm::vec3(0.0f, 1.0f, 0.0f));
-
-		//(*phongShader).SetUniformMat4f("model", model);
-
-		//renderer.UpdateAll(g_rotX_angle, g_rotY_angle);
-		//renderer.RenderAll(*camera);
+		renderer.UpdateAll(g_rotX_angle, g_rotY_angle);
+		renderer.RenderAll(*camera);
 
 		scene.SetGridUniforms(gridShader);
 		scene.DrawGrid();
