@@ -4,15 +4,17 @@
 #include "Particle.h"
 #include <glm/glm.hpp>
 
-const int SPRING_CONSTANT = 0.1;
+const float SPRING_CONSTANT = 1755.0f;
+const float DAMPING_CONSTANT = 35.0;
 
 class Spring
 {
 private:
 	float m_RestLength;
+	float m_SpringConstant;
+	float m_DampingConstant;
 	std::shared_ptr<Particle> m_EndOne;
 	std::shared_ptr<Particle> m_EndTwo;
-	float m_SpringConstant;
 	glm::vec3 m_NormalVec;
 
 public:
@@ -20,9 +22,13 @@ public:
 	~Spring();
 
 	void SetRestLength(float length);
+	void SetNormalVector(glm::vec3 normal);
 	void SetSpringConstant(float k);
 
-	inline float GetRestLength() const { return m_RestLength; }
-	inline float GetSpringConstant() const { return m_SpringConstant; }
-	inline glm::vec3 GetNormalVec() const { return m_NormalVec; }
+	inline float& GetRestLength() { return m_RestLength; }
+	inline float& GetSpringConstant() { return m_SpringConstant; }
+	inline float& GetDampingConstant() { return m_DampingConstant; }
+	inline glm::vec3& GetNormalVec() { return m_NormalVec; }
+	inline std::shared_ptr<Particle> GetEndOne() const { return m_EndOne; }
+	inline std::shared_ptr<Particle> GetEndTwo() const { return m_EndTwo; }
 };

@@ -25,3 +25,8 @@ void Spring::SetSpringConstant(float k)
 {
 	m_SpringConstant = k;
 }
+
+void Spring::SetNormalVector(glm::vec3 normal)
+{
+	m_NormalVec = normal;
+}

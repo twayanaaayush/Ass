@@ -26,7 +26,9 @@ const float NEAR_PLANE = 0.1f;
 const float FAR_PLANE = 100.0f;
 
 bool WIREFRAME_SETTING = true;
+bool BEGIN_SIMULATION = false;
 
+std::unique_ptr<Scene> scene;
 std::shared_ptr<Camera> camera = std::make_shared<Camera>(glm::vec3(0.0f, 1.5f, 6.0f));
 std::shared_ptr<Material> g_material = std::make_shared<Material>();
 std::shared_ptr<Light> g_light = std::make_shared<Light>();
@@ -46,6 +48,7 @@ void frameBuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window, double deltaTime);
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 void setWireframe();
+void setSimulation();
 void cursor_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
@@ -94,18 +97,18 @@ int main()
 	
 	// shaders
 	std::shared_ptr<Shader> phongShader(new Shader("res/shaders/PhongVertex.shader", "res/shaders/PhongFragment.shader"));
-	Shader gridShader("res/shaders/GridVertex.shader", "res/shaders/GridFragment.shader");
 
 	std::shared_ptr<std::vector<std::unique_ptr<Softbody>>> renderObjects =
 	std::make_shared<std::vector<std::unique_ptr<Softbody>>>();
 
-	Scene scene(camera);
-	std::unique_ptr<Softbody> ball = std::make_unique<Softbody>(0);
+	std::unique_ptr<Softbody> ball = std::make_unique<Softbody>(1);
 
 	(*renderObjects).push_back(std::move(ball));
 
 	Renderer<Softbody> renderer(renderObjects, g_light);
 	renderer.AddShader(phongShader);
+
+	scene = std::make_unique<Scene>(camera);
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -129,11 +132,11 @@ int main()
 			renderer.DisableWireframe();
 		}
 
-		renderer.UpdateAll(g_rotX_angle, g_rotY_angle);
+		renderer.UpdateAll(BEGIN_SIMULATION, g_rotX_angle, g_rotY_angle);
 		renderer.RenderAll(*camera);
 
-		scene.SetGridUniforms(gridShader);
-		scene.DrawGrid();
+		(*scene).SetGridUniforms();
+		(*scene).DrawGrid();
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
@@ -164,12 +167,22 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 {
 	if( key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) glfwSetWindowShouldClose(window, true);
 	if (key == GLFW_KEY_E && action == GLFW_PRESS) setWireframe();
+	if (key == GLFW_KEY_Q && action == GLFW_PRESS) setSimulation();
 	if (key == GLFW_KEY_R && action == GLFW_PRESS) (*camera).ResetPosition();
+	if (key == GLFW_KEY_G && action == GLFW_PRESS) (*scene).SetDrawGrid();
 }
 
 void setWireframe()
 {
 	WIREFRAME_SETTING = !WIREFRAME_SETTING;
+}
+
+void setSimulation()
+{
+	BEGIN_SIMULATION = !BEGIN_SIMULATION;
+
+	if (BEGIN_SIMULATION) std::cout << "Simulation Started" << std::endl;
+	else std::cout << "Simulation Stopped" << std::endl;
 }
 
 void cursor_callback(GLFWwindow* window, double xpos, double ypos)
@@ -198,7 +211,6 @@ void cursor_callback(GLFWwindow* window, double xpos, double ypos)
 
 		//		std::cout << closest_sphere_clicked << ", " << closest_intersection << std::endl;
 		//	}
-
 		//}
 	}
 

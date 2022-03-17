@@ -28,7 +28,7 @@ public:
 	void AddShader(std::shared_ptr<Shader> shader);
     void EnableWireframe();
     void DisableWireframe();
-	void UpdateAll(float g_rotX_angle, float g_rotY_angle);
+	void UpdateAll(bool BEGIN_SIMULATION, float g_rotX_angle, float g_rotY_angle);
 	void RenderAll(Camera& camera);
 };
 
@@ -84,12 +84,12 @@ void Renderer<T>::DisableWireframe()
 }
 
 template <typename T>
-void Renderer<T>::UpdateAll(float g_rotX_angle, float g_rotY_angle)
+void Renderer<T>::UpdateAll(bool BEGIN_SIMULATION, float g_rotX_angle, float g_rotY_angle)
 {
     for (auto it = (*m_RenderObjects).begin(); it != (*m_RenderObjects).end(); ++it)
     {
         //Update
-        (**it).Update(g_rotX_angle, g_rotY_angle);
+        (**it).Update(BEGIN_SIMULATION, g_rotX_angle, g_rotY_angle);
     }
 }
 

@@ -10,7 +10,7 @@ Mesh::Mesh()
 }
 
 Mesh::Mesh(std::vector<Vertex> vertices, std::vector<Triangle> indices)
-	: m_Vertices(std::move(vertices)), m_Indices(std::move(indices))
+	: m_Vertices(vertices), m_Indices(indices)
 {
 	InitBuffers();
 }
@@ -25,12 +25,12 @@ Mesh::~Mesh()
 
 void Mesh::SetVertices(std::vector<Vertex> vertices)
 {
-	m_Vertices = std::move(vertices);
+	m_Vertices = vertices;
 }
 
 void Mesh::SetIndices(std::vector<Triangle> indices)
 {
-	m_Indices = std::move(indices);
+	m_Indices = indices;
 }
 
 void Mesh::InitBuffers()
@@ -48,7 +48,7 @@ void Mesh::InitBuffers()
 
 void Mesh::UpdateBuffers()
 {
-	
+	m_VBO->Update(&m_Vertices[0], (unsigned int)(m_Vertices.size() * sizeof(Vertex)));
 }
 
 void Mesh::Draw() const

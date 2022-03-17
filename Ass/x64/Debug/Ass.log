@@ -1,4 +1,10 @@
 ﻿  main.cpp
-D:\programs\C\cpp\Ass\Ass\src\headers\Particle.h(5,32): warning C4305: 'initializing': truncation from 'double' to 'float'
-D:\programs\C\cpp\Ass\Ass\src\headers\Spring.h(7,29): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+D:\programs\C\cpp\Ass\Ass\src\soft bodies\Softbody.h(9,23): warning C4305: 'initializing': truncation from 'double' to 'float'
+  Softbody.cpp
+D:\programs\C\cpp\Ass\Ass\src\soft bodies\Softbody.h(9,23): warning C4305: 'initializing': truncation from 'double' to 'float'
+D:\programs\C\cpp\Ass\Ass\src\soft bodies\Softbody.cpp(123,14): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+D:\programs\C\cpp\Ass\Ass\src\soft bodies\Softbody.cpp(194,19): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+D:\programs\C\cpp\Ass\Ass\src\soft bodies\Softbody.cpp(200,14): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+D:\programs\C\cpp\Ass\Ass\src\soft bodies\Softbody.cpp(202,30): warning C4018: '<': signed/unsigned mismatch
+  Generating Code...
   Ass.vcxproj -> D:\programs\C\cpp\Ass\x64\Debug\Ass.exe

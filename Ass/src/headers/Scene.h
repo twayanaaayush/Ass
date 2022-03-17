@@ -13,14 +13,17 @@ extern const float FAR_PLANE;
 class Scene
 {
 private:
+	std::unique_ptr<Shader> m_GridShader;
 	std::unique_ptr<Mesh> m_GridMesh;
+	bool m_DrawGrid = true;
 
 public:
 	Scene(std::shared_ptr<Camera> cam);
 	~Scene();
 
-	void SetGridUniforms(Shader& shader);
+	void SetGridUniforms();
 	void DrawGrid();
+	void SetDrawGrid();
 
 private:
 	void InitGrid();

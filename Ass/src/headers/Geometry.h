@@ -115,7 +115,7 @@ namespace icosahedron
     }; 
 }
 
-namespace Plane
+namespace plane
 {
     static const std::vector<Vertex> grid = {
         {glm::vec3(1.0f,  1.0f, 0.0f)},
