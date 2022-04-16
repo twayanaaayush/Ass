@@ -40,8 +40,3 @@ void Particle::AddForce(glm::vec3 force)
 {
 	m_ForceAccumulated += force;
 }
-
-void Particle::Update()
-{
-	m_Position += m_Velocity;
-}

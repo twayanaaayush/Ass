@@ -59,7 +59,7 @@ void Softbody::Update(bool BEGIN_SIMULATION, float g_rotX_angle, float g_rotY_an
 	
 	if (BEGIN_SIMULATION)
 	{
-		//std::vector<Vertex> vertices;
+		std::vector<Vertex> vertices;
 
 		// main logic
 		AddGravityForce();
@@ -67,15 +67,22 @@ void Softbody::Update(bool BEGIN_SIMULATION, float g_rotX_angle, float g_rotY_an
 		CalculateVolume();
 		CalculatePressureValue();
 		CalculatePressureForce();
+		Integrate();
 
-		//for (auto it = m_Particles.begin(); it != m_Particles.end(); ++it)
-		//{
-		//	(**it).SetVelocity(glm::vec3(0.0f, -0.0098f, 0.0f));
-		//	(**it).Update();
-		//	vertices.push_back({ (**it).GetPosition() });
-		//}
+		for (auto it = m_Particles.begin(); it != m_Particles.end(); ++it)
+		{
+			vertices.push_back({ (**it).GetPosition() });
 
-		//(*m_Mesh).SetVertices(vertices);
+			glm::vec3 p = (**it).GetPosition();
+		//	std::cout << p.x << ", " << p.y << ", " << p.z << std::endl;
+		}
+
+		(*m_Mesh).SetVertices(vertices);
+
+		CalculateBoundingBox();
+		std::cout << (m_BoundingBox[0].x + m_BoundingBox[1].x) / 2 << ", "
+			<< (m_BoundingBox[0].y + m_BoundingBox[1].y) / 2 << ", "
+			<< (m_BoundingBox[0].z + m_BoundingBox[1].z) / 2 << "\n";
 	}
 }
 
@@ -94,7 +101,7 @@ void Softbody::AddGravityForce()
 	for (auto it = m_Particles.begin(); it != m_Particles.end(); ++it)
 	{
 		float fx = 0;
-		float fy = (**it).GetMass() * -9.8f; // include only when pressure variation, i.e. (Pressure - FINAL_PRESSURE >= 0);
+		float fy = (**it).GetMass() * -0.98f; // include only when pressure variation, i.e. (Pressure - FINAL_PRESSURE >= 0);
 		float fz = 0;
 		(**it).AddForce(glm::vec3(fx, fy, fz));
 	}
@@ -229,4 +236,21 @@ float Softbody::CalculatePressureValue()
 	m_PressureValue = pressureValue;
 
 	return pressureValue;
+}
+
+void Softbody::Integrate()
+{
+	float stepSize = 0.011f;
+
+	for (auto particle = m_Particles.begin(); particle != m_Particles.end(); ++particle)
+	{
+		glm::vec3 velocity = (**particle).GetVelocity();
+		glm::vec3 position = (**particle).GetPosition();
+
+		glm::vec3 acceleration = (**particle).GetForceAccumulated() / (**particle).GetMass();
+		velocity += acceleration * stepSize;
+		position += velocity * stepSize;
+		(**particle).SetVelocity(velocity);
+		(**particle).SetPosition(position);
+	}
 }

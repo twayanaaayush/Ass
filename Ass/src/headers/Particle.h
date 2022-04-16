@@ -2,7 +2,7 @@
 
 #include <glm/glm.hpp>
 
-const float PARTICLE_MASS = 1.0f;
+const float PARTICLE_MASS = 0.5f;
 
 class Particle
 {
@@ -28,5 +28,4 @@ public:
 	void SetPosition(glm::vec3 position);
 	void AddForce(glm::vec3 force);
 
-	void Update();
 };

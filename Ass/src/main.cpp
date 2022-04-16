@@ -29,7 +29,7 @@ bool WIREFRAME_SETTING = true;
 bool BEGIN_SIMULATION = false;
 
 std::unique_ptr<Scene> scene;
-std::shared_ptr<Camera> camera = std::make_shared<Camera>(glm::vec3(0.0f, 1.5f, 6.0f));
+std::shared_ptr<Camera> camera = std::make_shared<Camera>(glm::vec3(0.0f, 2.5f, 10.0f));
 std::shared_ptr<Material> g_material = std::make_shared<Material>();
 std::shared_ptr<Light> g_light = std::make_shared<Light>();
 
@@ -101,7 +101,7 @@ int main()
 	std::shared_ptr<std::vector<std::unique_ptr<Softbody>>> renderObjects =
 	std::make_shared<std::vector<std::unique_ptr<Softbody>>>();
 
-	std::unique_ptr<Softbody> ball = std::make_unique<Softbody>(1);
+	std::unique_ptr<Softbody> ball = std::make_unique<Softbody>(0);
 
 	(*renderObjects).push_back(std::move(ball));
 

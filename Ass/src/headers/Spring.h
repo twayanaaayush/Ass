@@ -4,8 +4,8 @@
 #include "Particle.h"
 #include <glm/glm.hpp>
 
-const float SPRING_CONSTANT = 1755.0f;
-const float DAMPING_CONSTANT = 35.0;
+const float SPRING_CONSTANT = 200.0f;
+const float DAMPING_CONSTANT = 1.0;
 
 class Spring
 {
